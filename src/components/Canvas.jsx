@@ -118,7 +118,7 @@ export default function Canvas({ onPublish }) {
       const global = await recordGlobalCopy("canvas");
       setCopyCount(global !== null ? global : recordCopy("canvas"));
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      setTimeout(() => setCopied(false), 2400);
     } catch {}
   }
 
@@ -215,8 +215,8 @@ export default function Canvas({ onPublish }) {
             <pre className="preview-art">{previewRows.join("\n")}</pre>
           </div>
           <div className="preview-actions">
-            <button type="button" className="copy-ready-button" onClick={handleCopy}>
-              {copied ? "Copied!" : "Copy paste-ready art"}
+            <button type="button" className={copied ? "copy-ready-button is-copied" : "copy-ready-button"} onClick={handleCopy}>
+              <span key={copied ? "copied" : "copy"} style={{display:"inline-block", animation:"copy-label-in 0.8s cubic-bezier(0.22, 1, 0.36, 1)"}}>{copied ? "✓ Copied!" : "Copy paste-ready art"}</span>
             </button>
             <button type="button" className="publish-button" onClick={handlePublish}>
               {published ? "Published!" : "Publish"}
@@ -362,9 +362,15 @@ export default function Canvas({ onPublish }) {
           text-align: center;
         }
         .preview-actions { display: flex; gap: 10px; margin-top: 16px; }
+        @keyframes copy-label-in {
+          from { opacity: 0; transform: translateY(4px) scale(0.97); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
         .copy-ready-button {
           flex: 1;
           background: #ff4655;
+          transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), color 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+          animation: copy-label-in 0.8s cubic-bezier(0.22, 1, 0.36, 1);
           color: #fff;
           border: 0;
           border-radius: 12px;
@@ -374,6 +380,9 @@ export default function Canvas({ onPublish }) {
           font-family: 'Figtree', system-ui, sans-serif;
           cursor: pointer;
         }
+        .copy-ready-button:hover { transform: scale(1.02); }
+        .copy-ready-button:active { transform: scale(0.98); }
+        .copy-ready-button.is-copied { background: #22c55e; box-shadow: 0 0 24px rgba(34, 197, 94, 0.25); }
         .publish-button {
           background: rgba(255, 255, 255, 0.10);
           color: #ece8e1;

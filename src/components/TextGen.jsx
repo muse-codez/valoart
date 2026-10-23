@@ -55,7 +55,7 @@ export default function TextGen() {
       const global = await recordGlobalCopy("textgen");
       setCopyCount(global !== null ? global : recordCopy("textgen"));
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      setTimeout(() => setCopied(false), 2400);
     } catch {}
   }
 
@@ -132,8 +132,8 @@ export default function TextGen() {
               <p className="meta">Type a phrase to see it here.</p>
             )}
           </div>
-          <button type="button" className="copy-ready-button" onClick={handleCopy} disabled={!pasteReady}>
-            {copied ? "Copied!" : "Copy paste-ready art"}
+          <button type="button" className={copied ? "copy-ready-button is-copied" : "copy-ready-button"} onClick={handleCopy} disabled={!pasteReady}>
+            <span key={copied ? "copied" : "copy"} style={{display:"inline-block", animation:"copy-label-in 0.8s cubic-bezier(0.22, 1, 0.36, 1)"}}>{copied ? "✓ Copied!" : "Copy paste-ready art"}</span>
           </button>
           {copyCount > 0 && (
             <p className="meta" style={{ marginTop: 8 }}>
@@ -265,9 +265,15 @@ export default function TextGen() {
           color: #ece8e1;
           text-align: center;
         }
+        @keyframes copy-label-in {
+          from { opacity: 0; transform: translateY(4px) scale(0.97); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
         .copy-ready-button {
           width: 100%;
           background: #ff4655;
+          transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), color 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+          animation: copy-label-in 0.8s cubic-bezier(0.22, 1, 0.36, 1);
           color: #fff;
           border: 0;
           border-radius: 12px;
@@ -278,6 +284,9 @@ export default function TextGen() {
           cursor: pointer;
           margin-top: 16px;
         }
+        .copy-ready-button:hover:not(:disabled) { transform: scale(1.02); }
+        .copy-ready-button:active:not(:disabled) { transform: scale(0.98); }
+        .copy-ready-button.is-copied { background: #22c55e; box-shadow: 0 0 24px rgba(34, 197, 94, 0.25); }
         .copy-ready-button:disabled { opacity: 0.5; cursor: default; }
         @media (max-width: 800px) {
           .textgen-grid { grid-template-columns: 1fr; }

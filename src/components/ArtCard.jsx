@@ -75,7 +75,9 @@ export default function ArtCard({ id, title, category, url, art }) {
         const global = await recordGlobalCopy(key);
         setCopyCount(global !== null ? global : recordCopy(key));
         setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
+        // Slow, lazy fade-back: copied state lingers, then eases out
+        // over 0.8s (see .art-card-copy transition below), not a snap.
+        setTimeout(() => setCopied(false), 2400);
         return;
       } catch {}
     }
@@ -84,7 +86,7 @@ export default function ArtCard({ id, title, category, url, art }) {
 
   return (
     <article className="art-card-box">
-      <div className="art-card-preview" ref={previewRef}>
+      <div className={copied ? "art-card-preview is-copied" : "art-card-preview"} ref={previewRef}>
         <button
           type="button"
           className="art-card-heart"
@@ -104,8 +106,8 @@ export default function ArtCard({ id, title, category, url, art }) {
         {category}
         {copyCount > 0 ? ` · ${copyCount} ${copyCount === 1 ? "copy" : "copies"}` : ""}
       </p>
-      <button type="button" className="art-card-copy" onClick={handleCopy}>
-        <Copy size={15} /> {copied ? "Copied!" : "Copy art"}
+      <button type="button" className={copied ? "art-card-copy is-copied" : "art-card-copy"} onClick={handleCopy}>
+        <span key={copied ? "copied" : "copy"} className="art-card-copy-label"><Copy size={15} /> {copied ? "Copied!" : "Copy art"}</span>
       </button>
 
       <style>{`
@@ -196,6 +198,19 @@ export default function ArtCard({ id, title, category, url, art }) {
           margin: 0 0 12px;
           padding: 0 4px;
         }
+        /* Smooth, slow, lazy copy animation: every change eases over
+           0.8s with a lazy ease-out curve, never a snap. The preview
+           glows softly when copied, then eases back out. */
+        .art-card-preview {
+          transition: box-shadow 0.8s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .art-card-preview.is-copied {
+          box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.45), 0 0 24px rgba(74, 222, 128, 0.18);
+        }
+        @keyframes copy-label-in {
+          from { opacity: 0; transform: translateY(4px) scale(0.97); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
         /* Copy button: transparent, always visible, same place on every card */
         .art-card-copy {
           display: flex;
@@ -214,9 +229,25 @@ export default function ArtCard({ id, title, category, url, art }) {
           font-family: 'Figtree', system-ui, sans-serif;
           cursor: pointer;
           opacity: 1;
+          transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), color 0.8s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .art-card-copy:hover {
           background: rgba(255, 255, 255, 0.10);
+          transform: scale(1.02);
+        }
+        .art-card-copy:active {
+          transform: scale(0.98);
+        }
+        .art-card-copy.is-copied {
+          background: rgba(34, 197, 94, 0.16);
+          border-color: rgba(74, 222, 128, 0.55);
+          color: #4ade80;
+        }
+        .art-card-copy-label {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          animation: copy-label-in 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
       `}</style>
     </article>
