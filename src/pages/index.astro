@@ -1,26 +1,90 @@
 ---
-import Navbar from "../components/Navbar.jsx";
-import SectionSwitcher from "../components/SectionSwitcher.jsx";
+import Layout from "../layouts/Layout.astro";
+import { GALLERY_ARTS } from "../lib/gallery.js";
+import { PROMO_ART } from "../lib/promo.js";
+
+// Landing page showcase: marquee + floating designs.
+// Marquee: promo + first 11 gallery arts, duplicated for a seamless loop.
+const MARQUEE_ARTS = [PROMO_ART, ...GALLERY_ARTS.slice(0, 11)];
+// Floating designs: a few distinct gallery arts, floating in place.
+const FLOATING_ARTS = [
+  GALLERY_ARTS.find((a) => a.id === 28),
+  GALLERY_ARTS.find((a) => a.id === 5),
+  GALLERY_ARTS.find((a) => a.id === 1),
+  GALLERY_ARTS.find((a) => a.id === 6),
+  GALLERY_ARTS.find((a) => a.id === 7),
+].filter(Boolean);
 ---
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ValoArt — Valorant Chat ASCII Arts</title>
-  <meta name="description" content="ValoArt — Valorant chat ASCII arts, made for VALORANT chat." />
-  <link rel="icon" href="/favicon.ico" />
-  <script src="https://stats.zruvix.com/api/script.js?siteId=8401d27cdb81" defer></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400&family=Noto+Sans+Mono:wght@400&family=Outfit:wght@600;700&family=Yarndings+12&display=swap" rel="stylesheet" />
+<Layout title="ValoArt — Valorant Chat ASCII Arts" description="ValoArt — Valorant chat ASCII arts, made for VALORANT chat." active="">
+  <section class="hero">
+    <p class="hero-eyebrow">Valorant Chat ASCII Arts</p>
+    <h1 class="hero-title">Chat art made<br />for <span>VALORANT</span> chat.</h1>
+    <p class="hero-subtitle">
+      ValoArt is a home for Valorant chat ASCII art — text art built to be
+      shared in VALORANT chat, in a fixed-width style that keeps its shape
+      when you paste it. Funny, cute, text and emoji arts, made for
+      ranked mates, aces, clutches and everything in between.
+    </p>
+    <div class="hero-ctas">
+      <a class="cta primary" href="/arts">Browse Arts</a>
+      <a class="cta" href="/textgen">Make a Banner</a>
+      <a class="cta" href="/canvas">Paint on Canvas</a>
+    </div>
+  </section>
+
+  <section class="marquee-section" aria-label="Featured arts">
+    <div class="marquee">
+      <div class="marquee-track">
+        {MARQUEE_ARTS.map((art) => (
+          <a class="marquee-card" href="/arts">
+            <pre>{art.art}</pre>
+            <span>{art.title}</span>
+          </a>
+        ))}
+        {MARQUEE_ARTS.map((art) => (
+          <div class="marquee-card" aria-hidden="true">
+            <pre>{art.art}</pre>
+            <span>{art.title}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="floating-section">
+    <h2>Floating designs</h2>
+    <p class="lead">A few favourites, floating. Click any card to copy it on the Arts page.</p>
+    <div class="floating-grid">
+      {FLOATING_ARTS.map((art, i) => (
+        <a class="floating-card" href="/arts" style={`--float-delay: ${i * 0.9}s; --float-duration: ${6 + i * 1.1}s;`}>
+          <pre>{art.art}</pre>
+          <span>{art.title}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="showcase">
+    <a class="showcase-card" href="/arts">
+      <h3>Arts</h3>
+      <p>149 chat arts to search and copy — funny, cute, text and emoji.</p>
+      <span>Browse Arts →</span>
+    </a>
+    <a class="showcase-card" href="/textgen">
+      <h3>Text Gen</h3>
+      <p>Turn any phrase up to 16 characters into a chunky block-letter banner.</p>
+      <span>Make a Banner →</span>
+    </a>
+    <a class="showcase-card" href="/canvas">
+      <h3>Canvas</h3>
+      <p>Paint your own art on a 26-column chat canvas, then publish it.</p>
+      <span>Paint on Canvas →</span>
+    </a>
+  </section>
+
   <style>
-    /* Global website background */
-    html, body { background: #343434; }
-    body { margin: 0; color: #ece8e1; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
     .hero {
-      padding: 170px 0 80px;
+      padding: 170px 0 60px;
       text-align: center;
     }
     .hero-eyebrow {
@@ -52,30 +116,158 @@ import SectionSwitcher from "../components/SectionSwitcher.jsx";
       line-height: 1.6;
       color: #d8dde2;
       max-width: 680px;
-      margin: 0 auto;
+      margin: 0 auto 28px;
     }
-    .anchor { scroll-margin-top: 110px; }
+    .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .cta {
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: #ece8e1;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      padding: 12px 22px;
+    }
+    .cta.primary { background: #ff4655; border-color: #ff4655; color: #fff; }
+    .cta:hover { transform: translateY(-1px); }
+
+    /* Marquee: slow, seamless, pauses on hover */
+    .marquee-section { padding: 20px 0 40px; }
+    .marquee {
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+      mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .marquee-track {
+      display: flex;
+      gap: 16px;
+      width: max-content;
+      animation: marquee-scroll 45s linear infinite;
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    .marquee-card {
+      display: block;
+      flex-shrink: 0;
+      width: 220px;
+      background: #2e2e2e;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 12px;
+      text-decoration: none;
+      color: #ece8e1;
+    }
+    .marquee-card pre {
+      font-family: 'Noto Sans Mono', monospace;
+      font-size: 9px;
+      line-height: 1;
+      white-space: pre;
+      overflow: hidden;
+      max-height: 120px;
+      margin: 0 0 8px;
+    }
+    .marquee-card span {
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    /* Floating designs: slow float up/down, staggered */
+    .floating-section { padding: 20px 0 40px; }
+    .floating-section h2, .showcase h2 {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(28px, 4vw, 40px);
+      margin: 0 0 8px;
+    }
+    .floating-section .lead {
+      font-family: 'Figtree', system-ui, sans-serif;
+      color: #d8dde2;
+      margin: 0 0 18px;
+    }
+    @keyframes float-up-down {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(-14px) rotate(1deg); }
+    }
+    .floating-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+    .floating-card {
+      display: block;
+      background: #2e2e2e;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 12px;
+      text-decoration: none;
+      color: #ece8e1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      animation: float-up-down var(--float-duration, 7s) ease-in-out infinite;
+      animation-delay: var(--float-delay, 0s);
+    }
+    .floating-card pre {
+      font-family: 'Noto Sans Mono', monospace;
+      font-size: 9px;
+      line-height: 1;
+      white-space: pre;
+      overflow: hidden;
+      max-height: 140px;
+      margin: 0 0 8px;
+    }
+    .floating-card span {
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding: 20px 0 80px;
+    }
+    .showcase-card {
+      display: block;
+      background: #2e2e2e;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 20px;
+      text-decoration: none;
+      color: #ece8e1;
+    }
+    .showcase-card h3 {
+      font-family: 'Outfit', system-ui, sans-serif;
+      margin: 0 0 8px;
+    }
+    .showcase-card p {
+      font-family: 'Figtree', system-ui, sans-serif;
+      color: #d8dde2;
+      line-height: 1.6;
+      margin: 0 0 14px;
+    }
+    .showcase-card span { font-family: 'Figtree', system-ui, sans-serif; font-weight: 700; color: #ff8a93; }
+
+    @media (max-width: 900px) {
+      .floating-grid { grid-template-columns: repeat(2, 1fr); }
+      .showcase { grid-template-columns: 1fr; }
+    }
     @media (max-width: 600px) {
-      .hero { padding: 150px 0 60px; }
+      .hero { padding-top: 150px; }
+      .floating-grid { grid-template-columns: 1fr; }
     }
   </style>
-</head>
-<body>
-  <Navbar client:load />
-  <main class="wrap">
-    <section class="hero">
-      <p class="hero-eyebrow">Valorant Chat ASCII Arts</p>
-      <h1 class="hero-title">Chat art made<br />for <span>VALORANT</span> chat.</h1>
-      <p class="hero-subtitle">
-        ValoArt is a home for Valorant chat ASCII art — text art built to be
-        shared in VALORANT chat, in a fixed-width style that keeps its shape
-        when you paste it. Funny, cute, text and emoji arts, made for
-        ranked mates, aces, clutches and everything in between.
-      </p>
-    </section>
-    <div class="anchor" id="ascii">
-      <SectionSwitcher client:load />
-    </div>
-  </main>
-</body>
-</html>
+</Layout>

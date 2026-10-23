@@ -1,0 +1,50 @@
+---
+import Navbar from "../components/Navbar.jsx";
+const { title = "ValoArt — Valorant Chat ASCII Arts", description = "ValoArt — Valorant chat ASCII arts, made for VALORANT chat.", active = "" } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="icon" href="/favicon.ico" />
+  <script src="https://stats.zruvix.com/api/script.js?siteId=8401d27cdb81" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400&family=Noto+Sans+Mono:wght@400&family=Outfit:wght@600;700&family=Yarndings+12&display=swap" rel="stylesheet" />
+  <style>
+    /* Global website background */
+    html, body { background: #343434; }
+    body { margin: 0; color: #ece8e1; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+    .page-header { padding: 150px 0 20px; }
+    .page-header h1 {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(36px, 6vw, 56px);
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .page-header p {
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(16px, 2.5vw, 19px);
+      line-height: 1.6;
+      color: #d8dde2;
+      max-width: 680px;
+      margin: 0;
+    }
+    @media (max-width: 600px) {
+      .page-header { padding-top: 140px; }
+    }
+  </style>
+</head>
+<body>
+  <Navbar client:load active={active} />
+  <main class="wrap">
+    <slot />
+  </main>
+</body>
+</html>

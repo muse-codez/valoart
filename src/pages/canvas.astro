@@ -1,0 +1,11 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Canvas from "../components/Canvas.jsx";
+---
+<Layout title="Canvas — ValoArt" description="Paint your own VALORANT chat art on a 26-column canvas on ValoArt." active="canvas">
+  <div class="page-header">
+    <h1>Canvas</h1>
+    <p>Paint your own chat art, cell by cell. Publish it and it will show up at the top of the Arts page.</p>
+  </div>
+  <Canvas client:load />
+</Layout>

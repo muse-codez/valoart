@@ -11,11 +11,21 @@ export default function ArtGallery({ extraArts = [] }) {
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef(null);
+  // Canvas publish handoff: /canvas saves published arts to
+  // sessionStorage and navigates here, so they show at the top of /arts
+  // even though Canvas and Arts are now separate pages.
+  const [sessionPublished, setSessionPublished] = useState([]);
+  useEffect(() => {
+    try {
+      const raw = window.sessionStorage.getItem("valoart-published");
+      if (raw) setSessionPublished(JSON.parse(raw));
+    } catch {}
+  }, []);
 
   const results = useMemo(() => {
     const q = query.toLowerCase();
-    return [...extraArts, ...GALLERY_ARTS].filter((art) => art.title.toLowerCase().includes(q));
-  }, [query, extraArts]);
+    return [...sessionPublished, ...extraArts, ...GALLERY_ARTS].filter((art) => art.title.toLowerCase().includes(q));
+  }, [query, extraArts, sessionPublished]);
 
   // Reset to the first 24 whenever the search changes.
   useEffect(() => {

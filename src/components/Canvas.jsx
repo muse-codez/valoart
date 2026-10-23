@@ -127,7 +127,23 @@ export default function Canvas({ onPublish }) {
       onPublish(previewRows.join("\n"));
       setPublished(true);
       setTimeout(() => setPublished(false), 2000);
+      return;
     }
+    // Standalone /canvas page: save to sessionStorage and go to /arts,
+    // where ArtGallery reads it and shows the published art at the top.
+    try {
+      const entry = {
+        id: `canvas-${Date.now()}`,
+        title: "Canvas art",
+        category: "Canvas",
+        url: "",
+        art: previewRows.join("\n"),
+      };
+      const prev = JSON.parse(window.sessionStorage.getItem("valoart-published") || "[]");
+      window.sessionStorage.setItem("valoart-published", JSON.stringify([entry, ...prev]));
+    } catch {}
+    setPublished(true);
+    setTimeout(() => { window.location.href = "/arts"; }, 1200);
   }
 
   return (

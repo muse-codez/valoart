@@ -2,15 +2,15 @@ import React from "react";
 import { Github } from "lucide-react";
 
 const OPTIONS = [
-  { label: "Ascii", href: "#ascii" },
-  { label: "Text gen", href: "#text-gen" },
-  { label: "Canvas", href: "#canvas" },
+  { label: "Arts", href: "/arts", key: "arts" },
+  { label: "Text gen", href: "/textgen", key: "textgen" },
+  { label: "Canvas", href: "/canvas", key: "canvas" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ active = "" }) {
   return (
     <nav className="navbar" aria-label="Main navigation">
-      <a className="brand" href="#top">
+      <a className="brand" href="/">
         {/* Yarndings 12 icon: the letter V renders as a patterned Yarndings motif. */}
         <span className="brand-icon" aria-hidden="true">V</span>
         <span className="brand-name">ValoArt</span>
@@ -18,7 +18,7 @@ export default function Navbar() {
 
       <div className="nav-options">
         {OPTIONS.map((opt) => (
-          <a key={opt.label} className="nav-option" href={opt.href}>
+          <a key={opt.label} className={active === opt.key ? "nav-option active" : "nav-option"} href={opt.href}>
             {opt.label}
           </a>
         ))}
@@ -101,6 +101,10 @@ export default function Navbar() {
         }
         .nav-option:hover {
           background: rgba(255, 255, 255, 0.10);
+          color: #ffffff;
+        }
+        .nav-option.active {
+          background: rgba(255, 70, 85, 0.25);
           color: #ffffff;
         }
         .github-link {
