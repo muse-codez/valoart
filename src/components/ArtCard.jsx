@@ -2,9 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Copy, Heart } from "lucide-react";
 
-// One grid-box card. Art text is passed in as `art` when available —
-// the user will give the asciis later, so for now a card can render
-// without art text and just show its title / meta, ready to be filled in.
+// One grid-box card, always the same size.
 // Props: title, category, copies, author, url, art (optional string).
 export default function ArtCard({ title, category, copies, author, url, art }) {
   const [liked, setLiked] = useState(false);
@@ -14,8 +12,6 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
   // trim or re-wrap rows. Join the rows into one line, preserving every
   // character in each row exactly. VALORANT chat then wraps that single
   // line back into the art's shape, so the art does not break.
-  // Preview stays multi-line: <pre> with white-space: pre, monospace,
-  // no wrapping — so what you see is exactly what will be pasted.
   async function handleCopy() {
     if (art) {
       const pasteReady = art.split(/\r?\n/).join("");
@@ -26,7 +22,6 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
         return;
       } catch {}
     }
-    // No art text supplied yet — open the original page, where it can be copied.
     if (url) window.open(url, "_blank", "noopener,noreferrer");
   }
 
@@ -56,6 +51,8 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
       </button>
 
       <style>{`
+        /* Same size for every card: fixed preview, single-line title/meta,
+           copy button pushed to the bottom (margin-top: auto), always visible. */
         .art-card-box {
           background: #2e2e2e;
           border: 1px solid rgba(255, 255, 255, 0.12);
@@ -64,18 +61,22 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
           overflow: hidden;
           display: flex;
           flex-direction: column;
+          height: 100%;
+          box-sizing: border-box;
         }
         .art-card-preview {
           position: relative;
           background: #242424;
           border-radius: 12px;
-          min-height: 170px;
+          height: 200px;
+          flex-shrink: 0;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 16px;
+          padding: 12px;
           margin-bottom: 14px;
-          overflow: auto;
+          overflow: hidden;
+          box-sizing: border-box;
         }
         .art-card-heart {
           position: absolute;
@@ -87,13 +88,22 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
           padding: 4px;
           z-index: 1;
         }
+        /* Art quality: tight line-height (1, not 1.35, so blocks stay square
+           instead of stretched tall), a font with proper block / box-drawing
+           / symbol coverage, no ligatures, no wrapping, no scrollbars. */
         .art-card-art {
           margin: 0;
-          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-          font-size: 12px;
-          line-height: 1.35;
+          max-width: 100%;
+          font-family: 'DejaVu Sans Mono', 'Noto Sans Mono', Consolas, 'Courier New', monospace;
+          font-size: 10px;
+          line-height: 1;
+          letter-spacing: 0;
+          font-variant-ligatures: none;
           white-space: pre;
+          word-break: normal;
+          overflow: hidden;
           color: #ece8e1;
+          text-align: center;
         }
         .art-card-placeholder {
           font-family: 'Figtree', system-ui, sans-serif;
@@ -104,6 +114,11 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
           font-family: 'Outfit', system-ui, sans-serif;
           font-weight: 600;
           font-size: 18px;
+          line-height: 24px;
+          height: 24px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
           color: #ece8e1;
           margin: 0 0 4px;
           padding: 0 4px;
@@ -112,16 +127,22 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
           font-family: 'Figtree', system-ui, sans-serif;
           color: #b9bfc7;
           font-size: 14px;
+          line-height: 20px;
+          height: 20px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
           margin: 0 0 12px;
           padding: 0 4px;
         }
-        /* Copy button: transparent, appears on card hover (and on focus, for keyboard users) */
+        /* Copy button: transparent, always visible, same place on every card */
         .art-card-copy {
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 8px;
           width: 100%;
+          margin-top: auto;
           background: transparent;
           color: #ece8e1;
           border: 1px solid rgba(255, 255, 255, 0.25);
@@ -131,11 +152,6 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
           font-weight: 700;
           font-family: 'Figtree', system-ui, sans-serif;
           cursor: pointer;
-          opacity: 0;
-          transition: opacity 0.2s ease, background 0.2s ease;
-        }
-        .art-card-box:hover .art-card-copy,
-        .art-card-box:focus-within .art-card-copy {
           opacity: 1;
         }
         .art-card-copy:hover {
