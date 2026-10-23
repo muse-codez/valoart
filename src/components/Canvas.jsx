@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
+import { Undo, Redo, Contrast, FlipHorizontal, ArrowLeft, ArrowRight, Trash, Plus, Copy, Upload } from "lucide-react";
 import { getCopyCount, getGlobalCopyCount, recordCopy, recordGlobalCopy } from "../lib/copyCounts.js";
 
 // Canvas section — extra file, as requested.
@@ -122,6 +123,56 @@ export default function Canvas({ onPublish }) {
     } catch {}
   }
 
+  // Named tool actions, reused by both the buttons and the keyboard.
+  const handleInvert = () => doAction((g) => g.map((row) => row.map((v) => !v)));
+  const handleMirror = () => doAction((g) => g.map((row) => [...row].reverse()));
+  const handleShiftLeft = () => doAction((g) => g.map((row) => [...row.slice(1), false]));
+  const handleShiftRight = () => doAction((g) => g.map((row) => [false, ...row.slice(0, -1)]));
+  const handleClear = () => doAction(() => emptyGrid(rows));
+  const handleEnlarge = () => handleHeightChange(Math.min(20, rows + 2));
+
+  // Keyboard command system: Ctrl/Cmd+Z undo, Ctrl/Cmd+Shift+Z or
+  // Ctrl/Cmd+Y redo, Shift+ArrowLeft/Right shift the canvas, I invert,
+  // M mirror, Delete clear, E enlarge. Ignored while typing in an
+  // input/textarea, so sliders and other fields keep working.
+  useEffect(() => {
+    function onKey(e) {
+      const target = e.target;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) return;
+      const mod = e.metaKey || e.ctrlKey;
+      const key = e.key.toLowerCase();
+      if (mod && key === "z") {
+        e.preventDefault();
+        if (e.shiftKey) handleRedo();
+        else handleUndo();
+        return;
+      }
+      if (mod && key === "y") {
+        e.preventDefault();
+        handleRedo();
+        return;
+      }
+      if (e.shiftKey && e.key === "ArrowLeft") {
+        e.preventDefault();
+        handleShiftLeft();
+        return;
+      }
+      if (e.shiftKey && e.key === "ArrowRight") {
+        e.preventDefault();
+        handleShiftRight();
+        return;
+      }
+      if (!mod && !e.altKey && !e.shiftKey) {
+        if (key === "i") { e.preventDefault(); handleInvert(); }
+        else if (key === "m") { e.preventDefault(); handleMirror(); }
+        else if (e.key === "Delete") { e.preventDefault(); handleClear(); }
+        else if (key === "e") { e.preventDefault(); handleEnlarge(); }
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
   function handlePublish() {
     if (onPublish) {
       onPublish(previewRows.join("\n"));
@@ -154,15 +205,18 @@ export default function Canvas({ onPublish }) {
           <p className="lead">Every cell becomes one character in chat.</p>
 
           <div className="canvas-tools">
-            <button type="button" onClick={handleUndo} disabled={!history.length}>Undo</button>
-            <button type="button" onClick={handleRedo} disabled={!future.length}>Redo</button>
-            <button type="button" onClick={() => doAction((g) => g.map((row) => row.map((v) => !v)))}>Invert</button>
-            <button type="button" onClick={() => doAction((g) => g.map((row) => [...row].reverse()))}>Mirror</button>
-            <button type="button" onClick={() => doAction((g) => g.map((row) => [...row.slice(1), false]))}>← Shift left</button>
-            <button type="button" onClick={() => doAction((g) => g.map((row) => [false, ...row.slice(0, -1)]))}>Shift right →</button>
-            <button type="button" onClick={() => doAction(() => emptyGrid(rows))}>Clear</button>
-            <button type="button" onClick={() => handleHeightChange(Math.min(20, rows + 2))}>Enlarge canvas</button>
+            <button type="button" onClick={handleUndo} disabled={!history.length}><Undo size={15} /> Undo <kbd>Ctrl+Z</kbd></button>
+            <button type="button" onClick={handleRedo} disabled={!future.length}><Redo size={15} /> Redo <kbd>Ctrl+Shift+Z</kbd></button>
+            <button type="button" onClick={handleInvert}><Contrast size={15} /> Invert <kbd>I</kbd></button>
+            <button type="button" onClick={handleMirror}><FlipHorizontal size={15} /> Mirror <kbd>M</kbd></button>
+            <button type="button" onClick={handleShiftLeft}><ArrowLeft size={15} /> Shift left <kbd>Shift+←</kbd></button>
+            <button type="button" onClick={handleShiftRight}><ArrowRight size={15} /> Shift right <kbd>Shift+→</kbd></button>
+            <button type="button" onClick={handleClear}><Trash size={15} /> Clear <kbd>Del</kbd></button>
+            <button type="button" onClick={handleEnlarge}><Plus size={15} /> Enlarge canvas <kbd>E</kbd></button>
           </div>
+          <p className="meta canvas-shortcuts">
+            Shortcuts: <kbd>Ctrl/Cmd+Z</kbd> Undo · <kbd>Ctrl+Shift+Z</kbd> Redo · <kbd>Shift+←</kbd> / <kbd>Shift+→</kbd> Shift · <kbd>I</kbd> Invert · <kbd>M</kbd> Mirror · <kbd>Del</kbd> Clear · <kbd>E</kbd> Enlarge
+          </p>
 
           <div className="spacing-row">
             <label className="field-label" htmlFor="canvas-height">Canvas height</label>
@@ -232,10 +286,10 @@ export default function Canvas({ onPublish }) {
           </div>
           <div className="preview-actions">
             <button type="button" className={copied ? "copy-ready-button is-copied" : "copy-ready-button"} onClick={handleCopy}>
-              <span key={copied ? "copied" : "copy"} style={{display:"inline-block", animation:"copy-label-in 0.8s cubic-bezier(0.22, 1, 0.36, 1)"}}>{copied ? "✓ Copied!" : "Copy paste-ready art"}</span>
+              <span key={copied ? "copied" : "copy"} style={{display:"inline-flex", alignItems:"center", gap:"8px", animation:"copy-label-in 0.8s cubic-bezier(0.22, 1, 0.36, 1)"}}><Copy size={16} /> {copied ? "Copied!" : "Copy paste-ready art"}</span>
             </button>
             <button type="button" className="publish-button" onClick={handlePublish}>
-              {published ? "Published!" : "Publish"}
+              <span style={{display:"inline-flex", alignItems:"center", gap:"8px"}}><Upload size={16} /> {published ? "Published!" : "Publish"}</span>
             </button>
           </div>
           {copyCount > 0 && (
@@ -288,18 +342,38 @@ export default function Canvas({ onPublish }) {
           font-size: 14px;
         }
         .canvas-tools { display: flex; flex-wrap: wrap; gap: 8px; }
+        /* Icon + text buttons, smooth: every hover/press eases, icons are
+           filled-style Lucide icons (stroke 2, currentColor) with a soft
+           filled button background, not just plain text. */
         .canvas-tools button {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
           background: rgba(255, 255, 255, 0.08);
           color: #ece8e1;
           border: 0;
           border-radius: 8px;
           padding: 8px 12px;
           font-size: 13px;
+          font-weight: 600;
           font-family: 'Figtree', system-ui, sans-serif;
           cursor: pointer;
+          transition: background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .canvas-tools button:disabled { opacity: 0.4; cursor: default; }
-        .canvas-tools button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.16); }
+        .canvas-tools button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.16); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); }
+        .canvas-tools button:active:not(:disabled) { transform: scale(0.97); }
+        .canvas-tools kbd, .canvas-shortcuts kbd {
+          background: rgba(255, 255, 255, 0.12);
+          border-radius: 4px;
+          padding: 1px 5px;
+          font-size: 11px;
+          font-family: 'Noto Sans Mono', monospace;
+          color: #b9bfc7;
+          white-space: nowrap;
+        }
+        .canvas-shortcuts { margin: 10px 0 0; line-height: 1.8; }
+        .publish-button span { display: inline-flex; align-items: center; gap: 8px; }
         .field-label {
           display: block;
           font-family: 'Figtree', system-ui, sans-serif;
