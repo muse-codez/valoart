@@ -3,17 +3,19 @@
 // the top of the Arts tab, so it always stays on top, even when the user
 // searches or scrolls the gallery. Copy uses the same single-space row
 // join as every other card, so it pastes in one line.
-// Art is the exact patorjk TAAG ANSI Shadow "RUVIX" art the user asked
-// for (6 rows x 37 wide, paste-ready 227 chars). Note: it is wider than
-// the usual 26-wide VALORANT arts, so in VALORANT chat it may wrap at
-// chat width rather than at 26 — that is inherent to this art, which the
-// user chose. On-site preview scales it to fit the card.
-// The art itself is only "RUVIX" — no .LOL line — the card title/URL
-// still promote ruvix.lol.
+// Proper promoting design (user asked for a good, proper promo after
+// rejecting both the custom RUVIX banner and the ANSI Shadow RUVIX art,
+// which was only "RUVIX" and 37 wide): a clean bordered badge, 7 rows
+// x 26 wide, paste-ready 188 chars. It says the brand, the domain, and
+// what it is — VALOART / ruvix.lol / CHAT ARTS — in plain readable text
+// centred on a dotted background with a solid border, so anyone who sees
+// it pasted in VALORANT chat instantly knows what site to visit. No
+// multi-space padding (only single spaces inside the text), so VALORANT
+// does not strip the layout; padding is the dotted background glyph.
 export const PROMO_ART = {
   id: "promo-ruvix",
   title: "Promo \u2014 ruvix.lol",
   category: "Promo",
   url: "https://ruvix.lol",
-  art: "██████╗ ██╗   ██╗██╗   ██╗██╗██╗  ██╗\n██╔══██╗██║   ██║██║   ██║██║╚██╗██╔╝\n██████╔╝██║   ██║██║   ██║██║ ╚███╔╝ \n██╔══██╗██║   ██║╚██╗ ██╔╝██║ ██╔██╗ \n██║  ██║╚██████╔╝ ╚████╔╝ ██║██╔╝ ██╗\n╚═╝  ╚═╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝  ╚═╝"
+  art: "██████████████████████████\n█░░░░░░░░░░░░░░░░░░░░░░░░█\n█░░░░░░░░VALOART░░░░░░░░░█\n█░░░░░░░ruvix.lol░░░░░░░░█\n█░░░░░░░CHAT ARTS░░░░░░░░█\n█░░░░░░░░░░░░░░░░░░░░░░░░█\n██████████████████████████"
 };
