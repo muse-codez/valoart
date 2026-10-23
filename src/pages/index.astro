@@ -1,11 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { GALLERY_ARTS } from "../lib/gallery.js";
-import { PROMO_ART } from "../lib/promo.js";
-
-// Landing page showcase: marquee only (floating designs removed).
-// Marquee: promo + first 11 gallery arts, duplicated for a seamless loop.
-const MARQUEE_ARTS = [PROMO_ART, ...GALLERY_ARTS.slice(0, 11)];
+import Marquee from "../components/Marquee.jsx";
 ---
 <Layout title="ValoArt — Valorant Chat ASCII Arts" description="ValoArt — Valorant chat ASCII arts, made for VALORANT chat." active="">
   <section class="hero">
@@ -24,24 +19,7 @@ const MARQUEE_ARTS = [PROMO_ART, ...GALLERY_ARTS.slice(0, 11)];
     </div>
   </section>
 
-  <section class="marquee-section" aria-label="Featured arts">
-    <div class="marquee">
-      <div class="marquee-track">
-        {MARQUEE_ARTS.map((art) => (
-          <a class="marquee-card" href="/arts">
-            <pre>{art.art}</pre>
-            <span>{art.title}</span>
-          </a>
-        ))}
-        {MARQUEE_ARTS.map((art) => (
-          <div class="marquee-card" aria-hidden="true">
-            <pre>{art.art}</pre>
-            <span>{art.title}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
+  <Marquee client:load />
 
   <section class="showcase">
     <a class="showcase-card" href="/arts">
@@ -112,54 +90,6 @@ const MARQUEE_ARTS = [PROMO_ART, ...GALLERY_ARTS.slice(0, 11)];
     }
     .cta.primary { background: #ff4655; border-color: #ff4655; color: #fff; }
     .cta:hover { transform: translateY(-1px); }
-
-    /* Marquee: slow, seamless, pauses on hover */
-    .marquee-section { padding: 20px 0 40px; }
-    .marquee {
-      overflow: hidden;
-      -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-      mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-    }
-    @keyframes marquee-scroll {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
-    }
-    .marquee-track {
-      display: flex;
-      gap: 16px;
-      width: max-content;
-      animation: marquee-scroll 45s linear infinite;
-    }
-    .marquee:hover .marquee-track { animation-play-state: paused; }
-    .marquee-card {
-      display: block;
-      flex-shrink: 0;
-      width: 220px;
-      background: #2e2e2e;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 16px;
-      padding: 12px;
-      text-decoration: none;
-      color: #ece8e1;
-    }
-    .marquee-card pre {
-      font-family: 'Noto Sans Mono', monospace;
-      font-size: 9px;
-      line-height: 1;
-      white-space: pre;
-      overflow: hidden;
-      max-height: 120px;
-      margin: 0 0 8px;
-    }
-    .marquee-card span {
-      font-family: 'Figtree', system-ui, sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-    }
 
     .showcase {
       display: grid;
