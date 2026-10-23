@@ -6,18 +6,70 @@ import Navbar from "../components/Navbar.jsx";
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ValoArt</title>
-  <meta name="description" content="ValoArt — Astro + React." />
+  <title>ValoArt — Valorant Chat ASCII Arts</title>
+  <meta name="description" content="ValoArt — Valorant chat ASCII arts, made for VALORANT chat." />
+  <link rel="icon" href="/favicon.ico" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400&family=Yarndings+12&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400&family=Outfit:wght@600;700&family=Yarndings+12&display=swap" rel="stylesheet" />
   <style>
     /* Global website background */
     html, body { background: #343434; }
     body { margin: 0; color: #ece8e1; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+    .hero {
+      padding: 170px 0 80px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ff8a93;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      padding: 7px 14px;
+      margin: 0 0 22px;
+    }
+    .hero-title {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: 1.02;
+      letter-spacing: -1px;
+      margin: 0 0 20px;
+    }
+    .hero-title span { color: #ff4655; }
+    .hero-subtitle {
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(17px, 2.5vw, 21px);
+      line-height: 1.6;
+      color: #d8dde2;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 150px 0 60px; }
+    }
   </style>
 </head>
 <body>
   <Navbar client:load />
+  <main class="wrap">
+    <section class="hero">
+      <p class="hero-eyebrow">Valorant Chat ASCII Arts</p>
+      <h1 class="hero-title">Chat art made<br />for <span>VALORANT</span> chat.</h1>
+      <p class="hero-subtitle">
+        ValoArt is a home for Valorant chat ASCII art — text art built to be
+        shared in VALORANT chat, in a fixed-width style that keeps its shape
+        when you paste it. Funny, cute, text and emoji arts, made for
+        ranked mates, aces, clutches and everything in between.
+      </p>
+    </section>
+  </main>
 </body>
 </html>
