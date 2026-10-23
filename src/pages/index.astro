@@ -1,5 +1,6 @@
 ---
 import Navbar from "../components/Navbar.jsx";
+import ChatArtSearch from "../components/ChatArtSearch.jsx";
 ---
 <!doctype html>
 <html lang="en">
@@ -52,6 +53,75 @@ import Navbar from "../components/Navbar.jsx";
       max-width: 680px;
       margin: 0 auto;
     }
+    .anchor { scroll-margin-top: 110px; }
+    .search-section { padding: 20px 0 80px; }
+    .search-section h2 {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(28px, 4vw, 40px);
+      margin: 0 0 8px;
+    }
+    .search-section .lead {
+      font-family: 'Figtree', system-ui, sans-serif;
+      font-weight: 400;
+      color: #d8dde2;
+      margin: 0 0 18px;
+    }
+    .search-section .row { display: flex; gap: 10px; }
+    .search-section input[type="text"] {
+      flex: 1;
+      background: #2e2e2e;
+      color: #ece8e1;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-family: 'Figtree', system-ui, sans-serif;
+    }
+    .search-section .meta {
+      font-family: 'Figtree', system-ui, sans-serif;
+      color: #b9bfc7;
+      font-size: 14px;
+    }
+    .search-section .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .search-section .card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .search-section .art-card h3 {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-weight: 600;
+      margin: 0 0 4px;
+      font-size: 18px;
+    }
+    .search-section pre {
+      background: #2a2a2a;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 12px;
+      padding: 16px;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px;
+      line-height: 1.35;
+      white-space: pre;
+    }
+    .search-section button {
+      background: #ff4655;
+      color: #fff;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
     @media (max-width: 600px) {
       .hero { padding: 150px 0 60px; }
     }
@@ -70,6 +140,9 @@ import Navbar from "../components/Navbar.jsx";
         ranked mates, aces, clutches and everything in between.
       </p>
     </section>
+    <div class="anchor" id="ascii">
+      <ChatArtSearch client:load />
+    </div>
   </main>
 </body>
 </html>
