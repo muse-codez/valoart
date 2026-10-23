@@ -93,7 +93,7 @@ export default function ArtCard({ id, title, category, url, art, slug }) {
           aria-label={`Like ${title}`}
           onClick={() => setLiked(!liked)}
         >
-          <Heart size={18} fill={liked ? "#ff4655" : "none"} color={liked ? "#ff4655" : "#ece8e1"} />
+          <Heart size={18} fill={liked ? "#ff4655" : "currentColor"} color={liked ? "#ff4655" : "#ece8e1"} />
         </button>
         {art ? (
           <pre className="art-card-art" ref={artRef} style={{ transform: `scale(${scale})` }}>{art}</pre>
@@ -107,7 +107,7 @@ export default function ArtCard({ id, title, category, url, art, slug }) {
         {copyCount > 0 ? ` · ${copyCount} ${copyCount === 1 ? "copy" : "copies"}` : ""}
       </p>
       <button type="button" className={copied ? "art-card-copy is-copied" : "art-card-copy"} onClick={handleCopy}>
-        <span key={copied ? "copied" : "copy"} className="art-card-copy-label"><Copy size={15} /> {copied ? "Copied!" : "Copy art"}</span>
+        <span key={copied ? "copied" : "copy"} className="art-card-copy-label"><Copy size={15} fill="currentColor" /> {copied ? "Copied!" : "Copy art"}</span>
       </button>
 
       <style>{`

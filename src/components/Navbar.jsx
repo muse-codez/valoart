@@ -31,7 +31,7 @@ export default function Navbar({ active = "" }) {
         rel="noopener noreferrer"
         aria-label="ValoArt on GitHub"
       >
-        <Github size={22} strokeWidth={1.8} />
+        <Github fill="currentColor" size={22} strokeWidth={1.8} />
       </a>
 
       <style>{`

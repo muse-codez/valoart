@@ -205,14 +205,14 @@ export default function Canvas({ onPublish }) {
           <p className="lead">Every cell becomes one character in chat.</p>
 
           <div className="canvas-tools">
-            <button type="button" onClick={handleUndo} disabled={!history.length} aria-label="Undo (Ctrl+Z)"><Undo size={15} /> Undo <span className="tool-tip"><Keyboard size={11} /> Ctrl+Z</span></button>
-            <button type="button" onClick={handleRedo} disabled={!future.length} aria-label="Redo (Ctrl+Shift+Z)"><Redo size={15} /> Redo <span className="tool-tip"><Keyboard size={11} /> Ctrl+Shift+Z</span></button>
-            <button type="button" onClick={handleInvert} aria-label="Invert (I)"><Contrast size={15} /> Invert <span className="tool-tip"><Keyboard size={11} /> I</span></button>
-            <button type="button" onClick={handleMirror} aria-label="Mirror (M)"><FlipHorizontal size={15} /> Mirror <span className="tool-tip"><Keyboard size={11} /> M</span></button>
-            <button type="button" onClick={handleShiftLeft} aria-label="Shift left (Shift+Left arrow)"><ArrowLeft size={15} /> Shift left <span className="tool-tip"><Keyboard size={11} /> Shift+←</span></button>
-            <button type="button" onClick={handleShiftRight} aria-label="Shift right (Shift+Right arrow)"><ArrowRight size={15} /> Shift right <span className="tool-tip"><Keyboard size={11} /> Shift+→</span></button>
-            <button type="button" onClick={handleClear} aria-label="Clear (Delete)"><Trash size={15} /> Clear <span className="tool-tip"><Keyboard size={11} /> Del</span></button>
-            <button type="button" onClick={handleEnlarge} aria-label="Enlarge canvas (E)"><Plus size={15} /> Enlarge canvas <span className="tool-tip"><Keyboard size={11} /> E</span></button>
+            <button type="button" onClick={handleUndo} disabled={!history.length} aria-label="Undo (Ctrl+Z)"><Undo fill="currentColor" size={15} /> Undo <span className="tool-tip"><Keyboard fill="currentColor" size={11} /> Ctrl+Z</span></button>
+            <button type="button" onClick={handleRedo} disabled={!future.length} aria-label="Redo (Ctrl+Shift+Z)"><Redo fill="currentColor" size={15} /> Redo <span className="tool-tip"><Keyboard fill="currentColor" size={11} /> Ctrl+Shift+Z</span></button>
+            <button type="button" onClick={handleInvert} aria-label="Invert (I)"><Contrast fill="currentColor" size={15} /> Invert <span className="tool-tip"><Keyboard fill="currentColor" size={11} /> I</span></button>
+            <button type="button" onClick={handleMirror} aria-label="Mirror (M)"><FlipHorizontal fill="currentColor" size={15} /> Mirror <span className="tool-tip"><Keyboard fill="currentColor" size={11} /> M</span></button>
+            <button type="button" onClick={handleShiftLeft} aria-label="Shift left (Shift+Left arrow)"><ArrowLeft fill="currentColor" size={15} /> Shift left <span className="tool-tip"><Keyboard fill="currentColor" size={11} /> Shift+←</span></button>
+            <button type="button" onClick={handleShiftRight} aria-label="Shift right (Shift+Right arrow)"><ArrowRight fill="currentColor" size={15} /> Shift right <span className="tool-tip"><Keyboard fill="currentColor" size={11} /> Shift+→</span></button>
+            <button type="button" onClick={handleClear} aria-label="Clear (Delete)"><Trash fill="currentColor" size={15} /> Clear <span className="tool-tip"><Keyboard fill="currentColor" size={11} /> Del</span></button>
+            <button type="button" onClick={handleEnlarge} aria-label="Enlarge canvas (E)"><Plus fill="currentColor" size={15} /> Enlarge canvas <span className="tool-tip"><Keyboard fill="currentColor" size={11} /> E</span></button>
           </div>
 
           <div className="spacing-row">
@@ -283,10 +283,10 @@ export default function Canvas({ onPublish }) {
           </div>
           <div className="preview-actions">
             <button type="button" className={copied ? "copy-ready-button is-copied" : "copy-ready-button"} onClick={handleCopy}>
-              <span key={copied ? "copied" : "copy"} style={{display:"inline-flex", alignItems:"center", gap:"8px", animation:"copy-label-in 0.8s cubic-bezier(0.22, 1, 0.36, 1)"}}><Copy size={16} /> {copied ? "Copied!" : "Copy paste-ready art"}</span>
+              <span key={copied ? "copied" : "copy"} style={{display:"inline-flex", alignItems:"center", gap:"8px", animation:"copy-label-in 0.8s cubic-bezier(0.22, 1, 0.36, 1)"}}><Copy fill="currentColor" size={16} /> {copied ? "Copied!" : "Copy paste-ready art"}</span>
             </button>
             <button type="button" className="publish-button" onClick={handlePublish}>
-              <span style={{display:"inline-flex", alignItems:"center", gap:"8px"}}><Upload size={16} /> {published ? "Published!" : "Publish"}</span>
+              <span style={{display:"inline-flex", alignItems:"center", gap:"8px"}}><Upload fill="currentColor" size={16} /> {published ? "Published!" : "Publish"}</span>
             </button>
           </div>
           {copyCount > 0 && (

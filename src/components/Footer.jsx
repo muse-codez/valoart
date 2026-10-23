@@ -30,7 +30,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="ValoArt on GitHub"
           >
-            <Github size={20} strokeWidth={1.8} />
+            <Github fill="currentColor" size={20} strokeWidth={1.8} />
           </a>
           <a className="footer-domain" href="https://ruvix.lol" target="_blank" rel="noopener noreferrer">
             ruvix.lol
