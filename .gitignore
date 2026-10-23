@@ -13,3 +13,4 @@ tunnel2.log
 bin/
 # OS / editor
 .DS_Store
+.neon

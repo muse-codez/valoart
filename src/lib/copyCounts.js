@@ -1,31 +1,28 @@
-// Copy counts, saved globally — not just on one device.
+// Copy counts, saved globally in Neon Postgres — not Abacus, not local.
 //
-// Global store: Abacus, a free public counter API with no account, no
-// API key, and open CORS, made for exactly this (static sites with no
-// backend). One namespace for this site, one key per art/generator:
-//   GET  https://abacus.jasoncameron.dev/get/<namespace>/<key>  (read, no change)
-//   GET  https://abacus.jasoncameron.dev/hit/<namespace>/<key>  (increment, returns new value)
-// A 404 on /get means the key has never been hit: a definite 0.
-// Trade-offs, stated plainly: keys are public, so anyone who knows the
-// namespace/key could hit a counter, and the service is a free community
-// project, not our own database. For copy counts (not money, not auth)
-// that is acceptable. A private, abuse-proof global count would need our
-// own backend (e.g. Vercel KV) — that is a separate setup step.
+// Frontend path: same-origin Vercel Serverless Function `api/copies.js`,
+// which talks to Neon Postgres with the DATABASE_URL env var set on
+// Vercel (Production). One row per key in the `copy_counts` table:
+//   art-<id> for gallery arts, textgen, canvas, canvas-<timestamp> for
+//   published canvas arts.
+//   GET  /api/copies?key=art-1  -> { key, count }   (read, no change)
+//   POST /api/copies  { key }   -> { key, count }   (atomic +1 in SQL)
+// Abacus was the previous global store and is no longer used; Postgres
+// counts start fresh (Abacus totals were not migrated).
 //
-// Fallback: if the global API is unreachable (offline, CORS, rate limit),
+// Fallback: if the API is unreachable or returns 503 (DATABASE_URL not
+// configured yet, or local Astro dev which does not serve `api/`),
 // counts fall back to this browser's localStorage, so copying still
 // records something and the UI still shows a number. Local counts are
-// NOT added to the global total — they are only shown when global is
-// unavailable.
-const GLOBAL_BASE = "https://abacus.jasoncameron.dev";
-const NAMESPACE = "valoart-muse-codez";
+// NOT added to the Postgres total — they are only shown when Postgres
+// is unavailable.
+const API_BASE = "/api/copies";
 const LOCAL_KEY = "valoart-copy-counts";
 
-function globalKey(id) {
-  // Gallery arts have numeric ids; generators use their own names.
-  return String(id).startsWith("art-") || id === "textgen" || id === "canvas" || String(id).startsWith("canvas-")
-    ? String(id)
-    : `art-${id}`;
+// Gallery arts have numeric ids; keep Postgres keys readable as art-<id>.
+function apiKey(id) {
+  const s = String(id);
+  return /^\d+$/.test(s) ? `art-${s}` : s;
 }
 
 function readLocalAll() {
@@ -55,34 +52,35 @@ export function recordCopy(id) {
   return next;
 }
 
-// Returns the global count, or null if it could not be read.
+// Returns the Postgres count, or null if it could not be read.
 export async function getGlobalCopyCount(id) {
   if (!id || typeof fetch === "undefined") return null;
   try {
-    const res = await fetch(`${GLOBAL_BASE}/get/${NAMESPACE}/${encodeURIComponent(globalKey(id))}`, {
+    const res = await fetch(`${API_BASE}?key=${encodeURIComponent(apiKey(id))}`, {
       cache: "no-store",
     });
-    if (res.status === 404) return 0;
     if (!res.ok) return null;
     const data = await res.json();
-    const value = parseInt(data.value, 10);
+    const value = parseInt(data.count, 10);
     return Number.isFinite(value) ? value : null;
   } catch {
     return null;
   }
 }
 
-// Increments the global count. Returns the new global count, or null
+// Increments the Postgres count. Returns the new count, or null
 // if the increment could not be recorded (caller falls back to local).
 export async function recordGlobalCopy(id) {
   if (!id || typeof fetch === "undefined") return null;
   try {
-    const res = await fetch(`${GLOBAL_BASE}/hit/${NAMESPACE}/${encodeURIComponent(globalKey(id))}`, {
-      cache: "no-store",
+    const res = await fetch(API_BASE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: apiKey(id) }),
     });
     if (!res.ok) return null;
     const data = await res.json();
-    const value = parseInt(data.value, 10);
+    const value = parseInt(data.count, 10);
     return Number.isFinite(value) ? value : null;
   } catch {
     return null;
