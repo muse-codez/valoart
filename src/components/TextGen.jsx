@@ -37,11 +37,14 @@ export default function TextGen() {
     // joining the rows keeps its shape in VALORANT chat.
     const display = rows.map((r) => r.replaceAll("#", "█").replaceAll(" ", bg));
     const w = display[0] ? display[0].length : 0;
+    // Paste-ready: rows joined with a single space between rows, like
+    // Valorant Scout (see ArtCard comment). Without the space, VALORANT
+    // treats the banner as one long word and wraps mid-row.
     return {
       displayRows: display,
       width: w,
-      totalChars: display.join("\n").length,
-      pasteReady: display.join(""),
+      totalChars: display.join(" ").length,
+      pasteReady: display.join(" "),
     };
   }, [text, spacing, bg]);
 
@@ -138,7 +141,7 @@ export default function TextGen() {
             </p>
           )}
           <p className="meta" style={{ marginTop: 12 }}>
-            We fill empty cells and join the rows so the shape survives VALORANT chat. Copy here, then press Ctrl+V in game.
+            We fill empty cells and join the rows with a space so the shape survives VALORANT chat. Copy here, then press Ctrl+V in game.
           </p>
         </div>
       </div>

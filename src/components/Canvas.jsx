@@ -39,8 +39,11 @@ export default function Canvas({ onPublish }) {
 
   const bg = BACKGROUNDS[bgIndex];
   const previewRows = gridToRows(grid, bg);
-  const totalChars = previewRows.join("\n").length;
-  const pasteReady = previewRows.join("");
+  // Paste-ready: rows joined with a single space between rows, like
+  // Valorant Scout (see ArtCard comment). Without the space, VALORANT
+  // treats the art as one long word and wraps mid-row.
+  const totalChars = previewRows.join(" ").length;
+  const pasteReady = previewRows.join(" ");
 
   function pushHistory(current) {
     setHistory((h) => [...h, cloneGrid(current)]);
@@ -225,7 +228,7 @@ export default function Canvas({ onPublish }) {
             </p>
           )}
           <p className="meta" style={{ marginTop: 12 }}>
-            We fill empty cells and join the rows so the shape survives VALORANT chat. Copy here, then press Ctrl+V in game.
+            We fill empty cells and join the rows with a space so the shape survives VALORANT chat. Copy here, then press Ctrl+V in game.
           </p>
         </div>
       </div>

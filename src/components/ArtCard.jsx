@@ -54,12 +54,19 @@ export default function ArtCard({ id, title, category, url, art }) {
   }, [art]);
 
   // Proper VALORANT-chat copying: do NOT copy with newlines, and do NOT
-  // trim or re-wrap rows. Join the rows into one line, preserving every
-  // character in each row exactly. VALORANT chat then wraps that single
-  // line back into the art's shape, so the art does not break.
+  // trim or re-wrap rows. Join the rows into one line with a SINGLE
+  // SPACE between rows, preserving every character in each row exactly.
+  // This is exactly what Valorant Scout does, proven by character
+  // counts: our old no-separator copy was 234 chars / 1 word / 0 spaces
+  // for a 9-row art, theirs was 242 chars / 9 words / 8 spaces — the
+  // same art plus one space per row gap. Without that space, VALORANT
+  // treats the whole art as one long word and wraps (or truncates) it
+  // mid-row, so only the first line looks right. With a space at each
+  // row boundary, VALORANT wraps at the space, i.e. at each row, so the
+  // art keeps its shape.
   async function handleCopy() {
     if (art) {
-      const pasteReady = art.split(/\r?\n/).join("");
+      const pasteReady = art.split(/\r?\n/).join(" ");
       try {
         await navigator.clipboard.writeText(pasteReady);
         // Only count a copy once the clipboard write actually succeeded.
