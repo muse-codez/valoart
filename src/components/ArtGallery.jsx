@@ -43,7 +43,7 @@ export default function ArtGallery() {
   return (
     <section className="gallery-section">
       <h2>Chat arts</h2>
-      <p className="lead">Search these arts. Hover a card to reveal its copy button. Scroll to load more.</p>
+      <p className="lead">Search these arts. Copy button is at the bottom of every card. Scroll to load more.</p>
       <SearchBar value={query} onChange={setQuery} placeholder="Search these arts…" />
       <p className="meta">
         Showing {visible.length} of {results.length} art{results.length === 1 ? "" : "s"}

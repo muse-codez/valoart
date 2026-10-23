@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Copy, Heart } from "lucide-react";
 
 // One grid-box card, always the same size.
@@ -7,6 +7,36 @@ import { Copy, Heart } from "lucide-react";
 export default function ArtCard({ title, category, copies, author, url, art }) {
   const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [scale, setScale] = useState(1);
+  const previewRef = useRef(null);
+  const artRef = useRef(null);
+
+  // Fit-to-box: measure the art at its natural size, then scale it so it
+  // fits the fixed preview box in BOTH width and height — never clipped
+  // on the left/right/bottom, and small/wide arts are enlarged to fill
+  // the preview instead of sitting as a tiny strip. This fixes the
+  // cropping seen on the live site, where a fixed font size rendered
+  // wider than the preview in some browsers/fonts.
+  useEffect(() => {
+    if (!art || !previewRef.current || !artRef.current) return;
+    const update = () => {
+      const preview = previewRef.current;
+      const el = artRef.current;
+      if (!preview || !el) return;
+      const innerW = preview.clientWidth - 24;
+      const innerH = preview.clientHeight - 24;
+      const naturalW = el.scrollWidth;
+      const naturalH = el.scrollHeight;
+      if (!naturalW || !naturalH || !innerW || !innerH) return;
+      const next = Math.min(innerW / naturalW, innerH / naturalH, 1.6);
+      if (next > 0 && Math.abs(next - scale) > 0.01) setScale(next);
+    };
+    update();
+    window.addEventListener("resize", update);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
+    return () => window.removeEventListener("resize", update);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [art]);
 
   // Proper VALORANT-chat copying: do NOT copy with newlines, and do NOT
   // trim or re-wrap rows. Join the rows into one line, preserving every
@@ -27,7 +57,7 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
 
   return (
     <article className="art-card-box">
-      <div className="art-card-preview">
+      <div className="art-card-preview" ref={previewRef}>
         <button
           type="button"
           className="art-card-heart"
@@ -37,7 +67,7 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
           <Heart size={18} fill={liked ? "#ff4655" : "none"} color={liked ? "#ff4655" : "#ece8e1"} />
         </button>
         {art ? (
-          <pre className="art-card-art">{art}</pre>
+          <pre className="art-card-art" ref={artRef} style={{ transform: `scale(${scale})` }}>{art}</pre>
         ) : (
           <span className="art-card-placeholder">Art coming soon</span>
         )}
@@ -93,7 +123,8 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
            / symbol coverage, no ligatures, no wrapping, no scrollbars. */
         .art-card-art {
           margin: 0;
-          max-width: 100%;
+          width: max-content;
+          max-width: none;
           font-family: 'DejaVu Sans Mono', 'Noto Sans Mono', Consolas, 'Courier New', monospace;
           font-size: 10px;
           line-height: 1;
@@ -101,9 +132,11 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
           font-variant-ligatures: none;
           white-space: pre;
           word-break: normal;
-          overflow: hidden;
+          overflow: visible;
           color: #ece8e1;
           text-align: center;
+          transform-origin: center;
+          flex-shrink: 0;
         }
         .art-card-placeholder {
           font-family: 'Figtree', system-ui, sans-serif;
