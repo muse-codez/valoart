@@ -84,7 +84,8 @@ const FLOATING_ARTS = [
 
   <style>
     .hero {
-      padding: 170px 0 60px;
+      /* Layout already adds 110px navbar clearance, so only 50px here (was 170px before the shared layout). */
+      padding: 50px 0 60px;
       text-align: center;
     }
     .hero-eyebrow {
@@ -266,7 +267,7 @@ const FLOATING_ARTS = [
       .showcase { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-      .hero { padding-top: 150px; }
+      .hero { padding-top: 30px; }
       .floating-grid { grid-template-columns: 1fr; }
     }
   </style>

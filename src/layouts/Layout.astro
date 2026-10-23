@@ -18,8 +18,15 @@ const { title = "ValoArt — Valorant Chat ASCII Arts", description = "ValoArt �
     /* Global website background */
     html, body { background: #343434; }
     body { margin: 0; color: #ece8e1; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-    .page-header { padding: 150px 0 20px; }
+    /* Universal navbar clearance: the navbar is fixed at top 16px and
+       ~64px tall on desktop (~110px tall when it wraps on mobile), so
+       every page gets this top offset in the shared layout — otherwise
+       the first heading on a page (e.g. "Spread ValoArt" on /arts, which
+       has no hero/page-header padding of its own) sits underneath it.
+       Per-page top paddings below are now small, on top of this offset,
+       so no page gets double padding. */
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 110px 20px 0; }
+    .page-header { padding: 30px 0 20px; }
     .page-header h1 {
       font-family: 'Outfit', system-ui, sans-serif;
       font-weight: 700;
@@ -37,7 +44,9 @@ const { title = "ValoArt — Valorant Chat ASCII Arts", description = "ValoArt �
       margin: 0;
     }
     @media (max-width: 600px) {
-      .page-header { padding-top: 140px; }
+      /* Navbar wraps to two rows on mobile, so it is taller — give more clearance here, not per-page. */
+      .wrap { padding-top: 150px; }
+      .page-header { padding-top: 20px; }
     }
   </style>
 </head>
