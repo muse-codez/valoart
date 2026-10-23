@@ -1,6 +1,7 @@
 ---
 import AsciiGenerator from "../components/AsciiGenerator.jsx";
 import ChatArtSearch from "../components/ChatArtSearch.jsx";
+import Navbar from "../components/Navbar.jsx";
 ---
 <!doctype html>
 <html lang="en">
@@ -9,12 +10,16 @@ import ChatArtSearch from "../components/ChatArtSearch.jsx";
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>valoart — Valorant Chat Arts &amp; ASCII Generator</title>
   <meta name="description" content="Search Valorant chat arts and generate ASCII text art. Built with Astro + React." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400&family=Yarndings+12&display=swap" rel="stylesheet" />
   <style>
     :root { --red: #ff4655; --ink: #0f1923; --panel: #1a2733; --line: #2b3a4a; --text: #ece8e1; --muted: #9aa8b5; }
     * { box-sizing: border-box; }
-    body { margin: 0; background: var(--ink); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    body { margin: 0; background: #343434; color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
     .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-    header { border-bottom: 3px solid var(--red); padding: 28px 0 22px; }
+    header { border-bottom: 3px solid var(--red); padding: 104px 0 22px; }
+    .anchor { scroll-margin-top: 110px; }
     h1 { margin: 6px 0 8px; font-size: clamp(28px, 5vw, 44px); }
     h1 span { color: var(--red); }
     .tagline { color: var(--muted); margin: 0; font-size: 17px; }
@@ -35,6 +40,7 @@ import ChatArtSearch from "../components/ChatArtSearch.jsx";
   </style>
 </head>
 <body>
+  <Navbar client:load />
   <header>
     <div class="wrap">
       <h1>valoart <span>—</span> Valorant Chat Arts</h1>
@@ -42,8 +48,16 @@ import ChatArtSearch from "../components/ChatArtSearch.jsx";
     </div>
   </header>
   <main class="wrap">
-    <AsciiGenerator client:load />
-    <ChatArtSearch client:load />
+    <div class="anchor" id="text-gen">
+      <AsciiGenerator client:load />
+    </div>
+    <div class="anchor" id="ascii">
+      <ChatArtSearch client:load />
+    </div>
+    <section class="anchor" id="about">
+      <h2>About ValoArt</h2>
+      <p class="lead">ValoArt is a simple Astro + React site for Valorant chat art: search chat arts, generate ASCII text art, and copy it for VALORANT chat. Fan-made, not affiliated with Riot Games or VALORANT.</p>
+    </section>
   </main>
   <footer>
     <div class="wrap">
