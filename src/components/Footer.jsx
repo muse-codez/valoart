@@ -121,8 +121,11 @@ export default function Footer() {
           border-radius: 10px;
           color: #ece8e1;
           text-decoration: none;
+          transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .footer-github:hover { background: rgba(255, 255, 255, 0.10); }
+        .footer-github svg { transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .footer-github:hover svg { transform: scale(1.18); }
         .footer-domain {
           font-family: 'Figtree', system-ui, sans-serif;
           color: #ff8a93;

@@ -102,8 +102,12 @@ export default function Navbar({ active = "" }) {
           text-decoration: none;
           padding: 8px 14px;
           border-radius: 10px;
+          transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), color 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .nav-option svg { flex-shrink: 0; }
+        .nav-option svg { flex-shrink: 0; transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .nav-option:hover svg { transform: scale(1.18); }
+        .github-link svg { transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .github-link:hover svg { transform: scale(1.18); }
         .nav-option:hover {
           background: rgba(255, 255, 255, 0.10);
           color: #ffffff;
@@ -122,6 +126,7 @@ export default function Navbar({ active = "" }) {
           color: #ece8e1;
           text-decoration: none;
           flex-shrink: 0;
+          transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .github-link:hover {
           background: rgba(255, 255, 255, 0.10);

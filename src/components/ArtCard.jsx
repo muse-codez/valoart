@@ -148,6 +148,10 @@ export default function ArtCard({ id, title, category, url, art, slug }) {
           padding: 4px;
           z-index: 1;
         }
+        .art-card-heart svg { transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .art-card-heart:hover svg { transform: scale(1.25); }
+        .art-card-copy-label svg { transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .art-card-copy:hover .art-card-copy-label svg { transform: scale(1.18); }
         /* Art quality: tight line-height (1, not 1.35, so blocks stay square
            instead of stretched tall), a font with proper block / box-drawing
            / symbol coverage, no ligatures, no wrapping, no scrollbars. */

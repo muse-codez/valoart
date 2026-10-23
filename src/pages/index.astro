@@ -84,8 +84,10 @@ import Marquee from "../components/Marquee.jsx";
       border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 999px;
       padding: 12px 22px;
+      transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .cta svg { flex-shrink: 0; }
+    .cta svg { flex-shrink: 0; transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+    .cta:hover svg { transform: scale(1.18); }
     .cta.primary { background: #ff4655; border-color: #ff4655; color: #fff; }
     .cta:hover { transform: translateY(-1px); }
 
