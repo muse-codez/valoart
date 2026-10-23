@@ -1,14 +1,51 @@
 import React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ArtGallery from "./ArtGallery.jsx";
 import TextGen from "./TextGen.jsx";
 import Canvas from "./Canvas.jsx";
+
+// Navbar routes <-> tabs. Navbar and SectionSwitcher are separate React
+// islands, so the URL hash is the bridge between them: a navbar click
+// changes the hash, and SectionSwitcher listens for that change.
+const TAB_FROM_HASH = {
+  "#ascii": "arts",
+  "#text-gen": "textgen",
+  "#canvas": "canvas",
+};
+const HASH_FROM_TAB = {
+  arts: "#ascii",
+  textgen: "#text-gen",
+  canvas: "#canvas",
+};
 
 // Section tabs, placed above the gallery area:
 // Arts (gallery), Text Gen (banner generator), Canvas (paint canvas).
 export default function SectionSwitcher() {
   const [tab, setTab] = useState("arts");
   const [published, setPublished] = useState([]);
+
+  useEffect(() => {
+    function syncFromHash() {
+      const next = TAB_FROM_HASH[window.location.hash];
+      if (next) {
+        setTab(next);
+        // All three tabs live in the same #ascii section, so scroll there
+        // (the hash itself has no matching element for #text-gen/#canvas).
+        document.getElementById("ascii")?.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
+  }, []);
+
+  function selectTab(next) {
+    setTab(next);
+    const hash = HASH_FROM_TAB[next];
+    if (hash && window.location.hash !== hash) {
+      window.history.replaceState(null, "", hash);
+    }
+  }
 
   function handlePublish(artText) {
     const entry = {
@@ -19,19 +56,19 @@ export default function SectionSwitcher() {
       art: artText,
     };
     setPublished((prev) => [entry, ...prev]);
-    setTab("arts");
+    selectTab("arts");
   }
 
   return (
     <div className="section-switcher">
       <div className="tab-buttons" role="tablist" aria-label="Sections">
-        <button type="button" className={tab === "arts" ? "tab-button active" : "tab-button"} onClick={() => setTab("arts")}>
+        <button type="button" className={tab === "arts" ? "tab-button active" : "tab-button"} onClick={() => selectTab("arts")}>
           Arts
         </button>
-        <button type="button" className={tab === "textgen" ? "tab-button active" : "tab-button"} onClick={() => setTab("textgen")}>
+        <button type="button" className={tab === "textgen" ? "tab-button active" : "tab-button"} onClick={() => selectTab("textgen")}>
           Text Gen
         </button>
-        <button type="button" className={tab === "canvas" ? "tab-button active" : "tab-button"} onClick={() => setTab("canvas")}>
+        <button type="button" className={tab === "canvas" ? "tab-button active" : "tab-button"} onClick={() => selectTab("canvas")}>
           Canvas
         </button>
       </div>

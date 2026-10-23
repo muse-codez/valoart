@@ -4,7 +4,7 @@ import { Github } from "lucide-react";
 const OPTIONS = [
   { label: "Ascii", href: "#ascii" },
   { label: "Text gen", href: "#text-gen" },
-  { label: "About", href: "#about" },
+  { label: "Canvas", href: "#canvas" },
 ];
 
 export default function Navbar() {
