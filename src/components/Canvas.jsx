@@ -1,5 +1,6 @@
 import React from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getCopyCount, recordCopy } from "../lib/copyCounts.js";
 
 // Canvas section — extra file, as requested.
 // Paint on a 26-column chat canvas, like the reference screenshot:
@@ -25,7 +26,11 @@ export default function Canvas({ onPublish }) {
   const [future, setFuture] = useState([]);
   const [bgIndex, setBgIndex] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [copyCount, setCopyCount] = useState(0);
   const [published, setPublished] = useState(false);
+  useEffect(() => {
+    setCopyCount(getCopyCount("canvas"));
+  }, []);
   const paintingRef = useRef(null); // true = painting, false = erasing, null = not painting
 
   const bg = BACKGROUNDS[bgIndex];
@@ -103,6 +108,7 @@ export default function Canvas({ onPublish }) {
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(pasteReady);
+      setCopyCount(recordCopy("canvas"));
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {}
@@ -208,6 +214,11 @@ export default function Canvas({ onPublish }) {
               {published ? "Published!" : "Publish"}
             </button>
           </div>
+          {copyCount > 0 && (
+            <p className="meta" style={{ marginTop: 8 }}>
+              Saved: {copyCount} {copyCount === 1 ? "copy" : "copies"} on this device
+            </p>
+          )}
           <p className="meta" style={{ marginTop: 12 }}>
             We fill empty cells and join the rows so the shape survives VALORANT chat. Copy here, then press Ctrl+V in game.
           </p>

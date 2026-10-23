@@ -1,6 +1,7 @@
 import React from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toBannerRows } from "../lib/ascii.js";
+import { getCopyCount, recordCopy } from "../lib/copyCounts.js";
 
 // Text Gen section — extra file, as requested.
 // Feature from the reference screenshot: turn any phrase into a banner
@@ -15,6 +16,10 @@ export default function TextGen() {
   const [spacing, setSpacing] = useState(1);
   const [bgIndex, setBgIndex] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [copyCount, setCopyCount] = useState(0);
+  useEffect(() => {
+    setCopyCount(getCopyCount("textgen"));
+  }, []);
 
   const bg = BACKGROUNDS[bgIndex];
 
@@ -40,6 +45,7 @@ export default function TextGen() {
     if (!pasteReady) return;
     try {
       await navigator.clipboard.writeText(pasteReady);
+      setCopyCount(recordCopy("textgen"));
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {}
@@ -121,6 +127,11 @@ export default function TextGen() {
           <button type="button" className="copy-ready-button" onClick={handleCopy} disabled={!pasteReady}>
             {copied ? "Copied!" : "Copy paste-ready art"}
           </button>
+          {copyCount > 0 && (
+            <p className="meta" style={{ marginTop: 8 }}>
+              Saved: {copyCount} {copyCount === 1 ? "copy" : "copies"} on this device
+            </p>
+          )}
           <p className="meta" style={{ marginTop: 12 }}>
             We fill empty cells and join the rows so the shape survives VALORANT chat. Copy here, then press Ctrl+V in game.
           </p>

@@ -1,12 +1,21 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Copy, Heart } from "lucide-react";
+import { getCopyCount, recordCopy } from "../lib/copyCounts.js";
 
 // One grid-box card, always the same size.
-// Props: title, category, copies, author, url, art (optional string).
-export default function ArtCard({ title, category, url, art }) {
+// Props: id, title, category, copies, author, url, art (optional string).
+export default function ArtCard({ id, title, category, url, art }) {
   const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
+  // Saved copies for this card, on this device. Loaded on mount so the
+  // count survives reloads. Cards start clean (no count shown) until
+  // the user has actually copied from this site — the old original-site
+  // copy numbers were removed earlier and are not restored here.
+  const [copyCount, setCopyCount] = useState(0);
+  useEffect(() => {
+    setCopyCount(getCopyCount(id || title));
+  }, [id, title]);
   const [scale, setScale] = useState(1);
   const previewRef = useRef(null);
   const artRef = useRef(null);
@@ -47,6 +56,8 @@ export default function ArtCard({ title, category, url, art }) {
       const pasteReady = art.split(/\r?\n/).join("");
       try {
         await navigator.clipboard.writeText(pasteReady);
+        // Only count a copy once the clipboard write actually succeeded.
+        setCopyCount(recordCopy(id || title));
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
         return;
@@ -73,7 +84,10 @@ export default function ArtCard({ title, category, url, art }) {
         )}
       </div>
       <h3 className="art-card-title">{title}</h3>
-      <p className="art-card-meta">{category}</p>
+      <p className="art-card-meta">
+        {category}
+        {copyCount > 0 ? ` · ${copyCount} ${copyCount === 1 ? "copy" : "copies"}` : ""}
+      </p>
       <button type="button" className="art-card-copy" onClick={handleCopy}>
         <Copy size={15} /> {copied ? "Copied!" : "Copy art"}
       </button>
