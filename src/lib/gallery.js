@@ -1,5 +1,4 @@
-// 149 gallery arts, from the user's saved Valorant Scout gallery page,
-// plus one promo art (first, pinned) for ruvix.lol, the site's domain.
+// 149 gallery arts, from the user's saved Valorant Scout gallery page.
 // User confirmed these are public and permitted for reuse (many sites
 // build with the same arts). Each art is one row per line, 26 chars wide.
 // ArtCard previews it in <pre> exactly as written, and Copy joins the
@@ -7,13 +6,6 @@
 // Card meta shows category only — copies and author names were removed
 // per user request.
 export const GALLERY_ARTS = [
-  {
-    "id": "promo-ruvix",
-    "title": "Promo — ruvix.lol",
-    "category": "Promo",
-    "url": "https://ruvix.lol",
-    "art": "████░█░░░██░░░█░███░█░░░█░\n█░░░██░░░██░░░█░░█░░░█░█░░\n████░█░░░██░░░█░░█░░░░█░░░\n█░░█░█░░░█░█░█░░░█░░░█░█░░\n█░░░█░███░░░█░░░███░█░░░█░\n░░░░░░░░░░░░░░░░░░░░░░░░░░\n░░░░░░░░░░░.LOL░░░░░░░░░░░"
-  },
   {
     "id": 1,
     "title": "Choco Poop",
