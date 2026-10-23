@@ -37,11 +37,6 @@ const pasteChars = art.art ? art.art.split("\n").join(" ").length : 0;
     <ArtCard client:load {...art} slug={slug} />
   </div>
 
-  <p class="detail-note">
-    Copy the art above, then press Ctrl+V in VALORANT chat. Rows are joined with a single space, so the shape survives in chat.
-    Share this page: <code>/art/{slug}</code>
-  </p>
-
   {related.length > 0 && (
     <section class="related">
       <h2>More {art.category} arts</h2>
@@ -66,20 +61,6 @@ const pasteChars = art.art ? art.art.split("\n").join(" ").length : 0;
       grid-template-columns: min(480px, 100%);
       gap: 16px;
       margin-bottom: 20px;
-    }
-    .detail-note {
-      font-family: 'Figtree', system-ui, sans-serif;
-      color: #d8dde2;
-      line-height: 1.6;
-      max-width: 680px;
-      margin: 0 0 40px;
-    }
-    .detail-note code {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
-      padding: 2px 8px;
-      font-family: 'Noto Sans Mono', monospace;
-      font-size: 14px;
     }
     .related { padding: 20px 0 80px; }
     .related h2 {

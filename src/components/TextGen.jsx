@@ -140,9 +140,6 @@ export default function TextGen() {
               {copyCount} {copyCount === 1 ? "copy" : "copies"} total
             </p>
           )}
-          <p className="meta" style={{ marginTop: 12 }}>
-            We fill empty cells and join the rows with a space so the shape survives VALORANT chat. Copy here, then press Ctrl+V in game.
-          </p>
         </div>
       </div>
 

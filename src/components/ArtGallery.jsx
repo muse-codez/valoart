@@ -62,14 +62,12 @@ export default function ArtGallery({ extraArts = [] }) {
     <section className="pinned-promo">
       <p className="pinned-label">Pinned</p>
       <h2>Spread ValoArt</h2>
-      <p className="lead">Copy this promo art and paste it in VALORANT chat — it promotes ruvix.lol.</p>
       <div className="pinned-grid">
         <ArtCard {...PROMO_ART} slug="promo-ruvix" />
       </div>
     </section>
     <section className="gallery-section">
       <h2>Chat arts</h2>
-      <p className="lead">Search these arts. Copy button is at the bottom of every card. Scroll to load more.</p>
       <SearchBar value={query} onChange={setQuery} placeholder="Search these arts…" />
       <p className="meta">
         Showing {visible.length} of {results.length} art{results.length === 1 ? "" : "s"}
