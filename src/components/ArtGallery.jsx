@@ -71,7 +71,7 @@ export default function ArtGallery({ extraArts = [] }) {
       <SearchBar value={query} onChange={setQuery} placeholder="Search these arts…" />
       <p className="meta">
         Showing {visible.length} of {results.length} art{results.length === 1 ? "" : "s"}
-        {hasMore ? " — scroll to load more" : ""}
+        {hasMore ? ", scroll to load more" : ""}
       </p>
       <div className="gallery-grid">
         {visible.map((art) => (

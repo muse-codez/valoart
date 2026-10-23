@@ -26,7 +26,7 @@ const rows = art.art ? art.art.split("\n").length : 0;
 const width = art.art ? Math.max(...art.art.split("\n").map((r) => r.length)) : 0;
 const pasteChars = art.art ? art.art.split("\n").join(" ").length : 0;
 ---
-<Layout title={`${art.title} — ValoArt`} description={`${art.title} Valorant chat ASCII art on ValoArt — copy and paste it into VALORANT chat.`} active="arts">
+<Layout title={`${art.title} on ValoArt`} description={`${art.title} Valorant chat ASCII art on ValoArt. Copy and paste it into VALORANT chat.`} active="arts">
   <div class="page-header">
     <p><a class="back-link" href="/arts">← Back to Arts</a></p>
     <h1>{art.title}</h1>
