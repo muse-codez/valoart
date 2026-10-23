@@ -4,7 +4,7 @@ import { Copy, Heart } from "lucide-react";
 
 // One grid-box card, always the same size.
 // Props: title, category, copies, author, url, art (optional string).
-export default function ArtCard({ title, category, copies, author, url, art }) {
+export default function ArtCard({ title, category, url, art }) {
   const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
   const [scale, setScale] = useState(1);
@@ -73,9 +73,7 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
         )}
       </div>
       <h3 className="art-card-title">{title}</h3>
-      <p className="art-card-meta">
-        {category} · {copies}{author ? ` · ${author}` : ""}
-      </p>
+      <p className="art-card-meta">{category}</p>
       <button type="button" className="art-card-copy" onClick={handleCopy}>
         <Copy size={15} /> {copied ? "Copied!" : "Copy art"}
       </button>
@@ -125,7 +123,7 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
           margin: 0;
           width: max-content;
           max-width: none;
-          font-family: 'DejaVu Sans Mono', 'Noto Sans Mono', Consolas, 'Courier New', monospace;
+          font-family: 'Noto Sans Mono', 'DejaVu Sans Mono', Consolas, 'Courier New', monospace;
           font-size: 10px;
           line-height: 1;
           letter-spacing: 0;
