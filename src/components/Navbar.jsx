@@ -1,10 +1,10 @@
 import React from "react";
-import { Github } from "lucide-react";
+import { Github, LayoutGrid, Type, Paintbrush } from "lucide-react";
 
 const OPTIONS = [
-  { label: "Arts", href: "/arts", key: "arts" },
-  { label: "Text gen", href: "/textgen", key: "textgen" },
-  { label: "Canvas", href: "/canvas", key: "canvas" },
+  { label: "Arts", href: "/arts", key: "arts", Icon: LayoutGrid },
+  { label: "Text gen", href: "/textgen", key: "textgen", Icon: Type },
+  { label: "Canvas", href: "/canvas", key: "canvas", Icon: Paintbrush },
 ];
 
 export default function Navbar({ active = "" }) {
@@ -19,6 +19,7 @@ export default function Navbar({ active = "" }) {
       <div className="nav-options">
         {OPTIONS.map((opt) => (
           <a key={opt.label} className={active === opt.key ? "nav-option active" : "nav-option"} href={opt.href}>
+            <opt.Icon fill="currentColor" size={16} />
             {opt.label}
           </a>
         ))}
@@ -91,6 +92,9 @@ export default function Navbar({ active = "" }) {
           justify-content: center;
         }
         .nav-option {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
           font-family: 'Figtree', system-ui, sans-serif;
           font-weight: 400;
           font-size: 16px;
@@ -99,6 +103,7 @@ export default function Navbar({ active = "" }) {
           padding: 8px 14px;
           border-radius: 10px;
         }
+        .nav-option svg { flex-shrink: 0; }
         .nav-option:hover {
           background: rgba(255, 255, 255, 0.10);
           color: #ffffff;
