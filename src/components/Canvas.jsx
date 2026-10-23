@@ -354,8 +354,8 @@ export default function Canvas({ onPublish }) {
           cursor: pointer;
           transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .canvas-tools button svg { transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
-        .canvas-tools button:hover:not(:disabled) svg { transform: scale(1.18); }
+        @keyframes icon-flip { 0% { transform: perspective(500px) rotateY(0deg) scale(1); } 50% { transform: perspective(500px) rotateY(180deg) scale(1.15); } 100% { transform: perspective(500px) rotateY(360deg) scale(1); } }
+        .canvas-tools button:hover:not(:disabled) > svg { animation: icon-flip 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
         .canvas-tools button:disabled { opacity: 0.4; cursor: default; }
         .canvas-tools button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.16); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); }
         .canvas-tools button:active:not(:disabled) { transform: scale(0.97); }
@@ -392,8 +392,7 @@ export default function Canvas({ onPublish }) {
         .publish-button span { display: inline-flex; align-items: center; gap: 8px; }
         .publish-button { transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
         .publish-button:hover { transform: translateY(-1px); }
-        .copy-ready-button svg, .publish-button svg { transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
-        .copy-ready-button:hover svg, .publish-button:hover svg { transform: scale(1.18); }
+        .copy-ready-button:hover svg, .publish-button:hover svg { animation: icon-flip 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
         .field-label {
           display: block;
           font-family: 'Figtree', system-ui, sans-serif;
