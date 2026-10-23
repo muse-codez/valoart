@@ -1,0 +1,54 @@
+---
+import AsciiGenerator from "../components/AsciiGenerator.jsx";
+import ChatArtSearch from "../components/ChatArtSearch.jsx";
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>valoart — Valorant Chat Arts &amp; ASCII Generator</title>
+  <meta name="description" content="Search Valorant chat arts and generate ASCII text art. Built with Astro + React." />
+  <style>
+    :root { --red: #ff4655; --ink: #0f1923; --panel: #1a2733; --line: #2b3a4a; --text: #ece8e1; --muted: #9aa8b5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--ink); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+    header { border-bottom: 3px solid var(--red); padding: 28px 0 22px; }
+    h1 { margin: 6px 0 8px; font-size: clamp(28px, 5vw, 44px); }
+    h1 span { color: var(--red); }
+    .tagline { color: var(--muted); margin: 0; font-size: 17px; }
+    section { padding: 28px 0; }
+    h2 { font-size: 26px; margin: 0 0 6px; }
+    p.lead { color: var(--muted); margin: 0 0 16px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    input, select { background: #0f1923; color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 16px; }
+    input[type="text"] { flex: 1; min-width: 220px; }
+    button { background: var(--red); color: #fff; border: 0; border-radius: 10px; padding: 12px 18px; font-size: 15px; font-weight: 700; cursor: pointer; }
+    button.secondary { background: transparent; border: 1px solid var(--line); color: var(--text); }
+    pre { background: #0a1119; border: 1px solid var(--line); border-radius: 12px; padding: 16px; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; line-height: 1.35; white-space: pre; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 16px; }
+    .art-card h3 { margin: 0 0 4px; font-size: 18px; }
+    .meta { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+    footer { border-top: 1px solid var(--line); padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>valoart <span>—</span> Valorant Chat Arts</h1>
+      <p class="tagline">Astro + React. Search chat arts, generate ASCII text art, copy it for VALORANT chat.</p>
+    </div>
+  </header>
+  <main class="wrap">
+    <AsciiGenerator client:load />
+    <ChatArtSearch client:load />
+  </main>
+  <footer>
+    <div class="wrap">
+      <p>Fan-made, not affiliated with Riot Games or VALORANT. Gallery listing based on the public valorantscout.com/ascii listing; assets from the GPL-3.0 valorant-scout project.</p>
+    </div>
+  </footer>
+</body>
+</html>

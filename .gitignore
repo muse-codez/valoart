@@ -1,0 +1,15 @@
+# dependencies
+node_modules/
+# build output
+dist/
+.astro/
+# local dev / tunnel logs
+*.log
+dev.log
+dev2.log
+tunnel.log
+tunnel2.log
+# local tooling (cloudflared binary, not part of the site)
+bin/
+# OS / editor
+.DS_Store
