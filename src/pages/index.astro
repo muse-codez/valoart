@@ -1,6 +1,6 @@
 ---
 import Navbar from "../components/Navbar.jsx";
-import ChatArtSearch from "../components/ChatArtSearch.jsx";
+import ArtGallery from "../components/ArtGallery.jsx";
 ---
 <!doctype html>
 <html lang="en">
@@ -54,76 +54,105 @@ import ChatArtSearch from "../components/ChatArtSearch.jsx";
       margin: 0 auto;
     }
     .anchor { scroll-margin-top: 110px; }
-    .search-section { padding: 20px 0 80px; }
-    .search-section h2 {
+    /* Gallery — screenshot layout, our colours (#343434, #ece8e1, #ff4655) */
+    .gallery-section { padding: 20px 0 80px; }
+    .gallery-section h2 {
       font-family: 'Outfit', system-ui, sans-serif;
       font-weight: 700;
       font-size: clamp(28px, 4vw, 40px);
       margin: 0 0 8px;
     }
-    .search-section .lead {
+    .gallery-section .lead {
       font-family: 'Figtree', system-ui, sans-serif;
       font-weight: 400;
       color: #d8dde2;
       margin: 0 0 18px;
     }
-    .search-section .row { display: flex; gap: 10px; }
-    .search-section input[type="text"] {
-      flex: 1;
-      background: #2e2e2e;
-      color: #ece8e1;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 12px;
-      padding: 14px 16px;
-      font-size: 16px;
-      font-family: 'Figtree', system-ui, sans-serif;
-    }
-    .search-section .meta {
+    .gallery-section .meta {
       font-family: 'Figtree', system-ui, sans-serif;
       color: #b9bfc7;
       font-size: 14px;
     }
-    .search-section .grid {
+    .gallery-section .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
       margin-top: 16px;
     }
-    .search-section .card {
-      background: rgba(255, 255, 255, 0.06);
+    .gallery-section .card {
+      background: #2e2e2e;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      padding: 18px;
+      border-radius: 16px;
+      padding: 12px;
+      overflow: hidden;
     }
-    .search-section .art-card h3 {
+    .gallery-section .preview {
+      position: relative;
+      background: #242424;
+      border-radius: 12px;
+      min-height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .gallery-section .heart {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .gallery-section .preview-link {
+      text-decoration: none;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .gallery-section .preview-summary {
+      font-family: 'Figtree', system-ui, sans-serif;
+      color: #d8dde2;
+      font-size: 15px;
+    }
+    .gallery-section .preview-action {
+      font-family: 'Figtree', system-ui, sans-serif;
+      color: #ff8a93;
+      font-size: 13px;
+    }
+    .gallery-section .art-card h3 {
       font-family: 'Outfit', system-ui, sans-serif;
       font-weight: 600;
       margin: 0 0 4px;
       font-size: 18px;
+      padding: 0 4px;
     }
-    .search-section pre {
-      background: #2a2a2a;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 12px;
-      padding: 16px;
-      overflow: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 13px;
-      line-height: 1.35;
-      white-space: pre;
-    }
-    .search-section button {
-      background: #ff4655;
-      color: #fff;
-      border: 0;
+    .gallery-section .art-card .meta { padding: 0 4px; margin: 0 0 12px; }
+    .gallery-section .copy-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.10);
+      color: #ece8e1;
+      text-decoration: none;
       border-radius: 10px;
-      padding: 10px 16px;
+      padding: 12px;
       font-size: 14px;
       font-weight: 700;
-      cursor: pointer;
+      font-family: 'Figtree', system-ui, sans-serif;
+    }
+    .gallery-section .copy-button:hover { background: #ff4655; color: #fff; }
+    .gallery-section .gallery-note { margin-top: 18px; }
+    @media (max-width: 900px) {
+      .gallery-section .grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 600px) {
       .hero { padding: 150px 0 60px; }
+      .gallery-section .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -141,7 +170,7 @@ import ChatArtSearch from "../components/ChatArtSearch.jsx";
       </p>
     </section>
     <div class="anchor" id="ascii">
-      <ChatArtSearch client:load />
+      <ArtGallery client:load />
     </div>
   </main>
 </body>
