@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
-import { getCopyCount, recordCopy } from "../lib/copyCounts.js";
+import { getCopyCount, getGlobalCopyCount, recordCopy, recordGlobalCopy } from "../lib/copyCounts.js";
 
 // Canvas section — extra file, as requested.
 // Paint on a 26-column chat canvas, like the reference screenshot:
@@ -29,7 +29,11 @@ export default function Canvas({ onPublish }) {
   const [copyCount, setCopyCount] = useState(0);
   const [published, setPublished] = useState(false);
   useEffect(() => {
-    setCopyCount(getCopyCount("canvas"));
+    let cancelled = false;
+    getGlobalCopyCount("canvas").then((global) => {
+      if (!cancelled) setCopyCount(global !== null ? global : getCopyCount("canvas"));
+    });
+    return () => { cancelled = true; };
   }, []);
   const paintingRef = useRef(null); // true = painting, false = erasing, null = not painting
 
@@ -108,7 +112,8 @@ export default function Canvas({ onPublish }) {
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(pasteReady);
-      setCopyCount(recordCopy("canvas"));
+      const global = await recordGlobalCopy("canvas");
+      setCopyCount(global !== null ? global : recordCopy("canvas"));
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {}
@@ -216,7 +221,7 @@ export default function Canvas({ onPublish }) {
           </div>
           {copyCount > 0 && (
             <p className="meta" style={{ marginTop: 8 }}>
-              Saved: {copyCount} {copyCount === 1 ? "copy" : "copies"} on this device
+              {copyCount} {copyCount === 1 ? "copy" : "copies"} total
             </p>
           )}
           <p className="meta" style={{ marginTop: 12 }}>

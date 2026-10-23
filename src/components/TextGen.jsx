@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { toBannerRows } from "../lib/ascii.js";
-import { getCopyCount, recordCopy } from "../lib/copyCounts.js";
+import { getCopyCount, getGlobalCopyCount, recordCopy, recordGlobalCopy } from "../lib/copyCounts.js";
 
 // Text Gen section — extra file, as requested.
 // Feature from the reference screenshot: turn any phrase into a banner
@@ -18,7 +18,11 @@ export default function TextGen() {
   const [copied, setCopied] = useState(false);
   const [copyCount, setCopyCount] = useState(0);
   useEffect(() => {
-    setCopyCount(getCopyCount("textgen"));
+    let cancelled = false;
+    getGlobalCopyCount("textgen").then((global) => {
+      if (!cancelled) setCopyCount(global !== null ? global : getCopyCount("textgen"));
+    });
+    return () => { cancelled = true; };
   }, []);
 
   const bg = BACKGROUNDS[bgIndex];
@@ -45,7 +49,8 @@ export default function TextGen() {
     if (!pasteReady) return;
     try {
       await navigator.clipboard.writeText(pasteReady);
-      setCopyCount(recordCopy("textgen"));
+      const global = await recordGlobalCopy("textgen");
+      setCopyCount(global !== null ? global : recordCopy("textgen"));
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {}
@@ -129,7 +134,7 @@ export default function TextGen() {
           </button>
           {copyCount > 0 && (
             <p className="meta" style={{ marginTop: 8 }}>
-              Saved: {copyCount} {copyCount === 1 ? "copy" : "copies"} on this device
+              {copyCount} {copyCount === 1 ? "copy" : "copies"} total
             </p>
           )}
           <p className="meta" style={{ marginTop: 12 }}>

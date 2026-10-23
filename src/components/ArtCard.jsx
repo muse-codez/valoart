@@ -1,20 +1,26 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Copy, Heart } from "lucide-react";
-import { getCopyCount, recordCopy } from "../lib/copyCounts.js";
+import { getCopyCount, getGlobalCopyCount, recordCopy, recordGlobalCopy } from "../lib/copyCounts.js";
 
 // One grid-box card, always the same size.
 // Props: id, title, category, copies, author, url, art (optional string).
 export default function ArtCard({ id, title, category, url, art }) {
   const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
-  // Saved copies for this card, on this device. Loaded on mount so the
-  // count survives reloads. Cards start clean (no count shown) until
-  // the user has actually copied from this site — the old original-site
-  // copy numbers were removed earlier and are not restored here.
+  // Global copies for this card, for all visitors. Loaded on mount;
+  // falls back to this device's local count if the global API is down.
+  // Cards show no count until the global total is > 0 — the old
+  // original-site copy numbers were removed earlier and are not
+  // restored here.
   const [copyCount, setCopyCount] = useState(0);
   useEffect(() => {
-    setCopyCount(getCopyCount(id || title));
+    let cancelled = false;
+    const key = id || title;
+    getGlobalCopyCount(key).then((global) => {
+      if (!cancelled) setCopyCount(global !== null ? global : getCopyCount(key));
+    });
+    return () => { cancelled = true; };
   }, [id, title]);
   const [scale, setScale] = useState(1);
   const previewRef = useRef(null);
@@ -57,7 +63,10 @@ export default function ArtCard({ id, title, category, url, art }) {
       try {
         await navigator.clipboard.writeText(pasteReady);
         // Only count a copy once the clipboard write actually succeeded.
-        setCopyCount(recordCopy(id || title));
+        // Global first; local only if the global API is unreachable.
+        const key = id || title;
+        const global = await recordGlobalCopy(key);
+        setCopyCount(global !== null ? global : recordCopy(key));
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
         return;
