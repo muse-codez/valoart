@@ -51,7 +51,7 @@ export default function ArtGallery() {
       </p>
       <div className="gallery-grid">
         {visible.map((art) => (
-          <ArtCard key={art.title} {...art} />
+          <ArtCard key={art.id ?? art.title} {...art} />
         ))}
         {results.length === 0 && <p className="meta">No matches. Try another search.</p>}
       </div>
