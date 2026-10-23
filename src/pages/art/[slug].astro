@@ -1,0 +1,103 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ArtCard from "../../components/ArtCard.jsx";
+import { GALLERY_ARTS } from "../../lib/gallery.js";
+import { PROMO_ART } from "../../lib/promo.js";
+import { buildSlugMap, getSlugById } from "../../lib/slug.js";
+
+export function getStaticPaths() {
+  const slugMap = buildSlugMap(GALLERY_ARTS);
+  const paths = GALLERY_ARTS.map((art) => ({
+    params: { slug: getSlugById(slugMap, art) },
+    props: { art, slug: getSlugById(slugMap, art) },
+  }));
+  // Pinned promo also gets its own page, same slug as its /arts card.
+  paths.push({
+    params: { slug: "promo-ruvix" },
+    props: { art: PROMO_ART, slug: "promo-ruvix" },
+  });
+  return paths;
+}
+
+const { art, slug } = Astro.props;
+const slugMap = buildSlugMap(GALLERY_ARTS);
+const related = GALLERY_ARTS.filter((a) => a.category === art.category && a.id !== art.id).slice(0, 8);
+const rows = art.art ? art.art.split("\n").length : 0;
+const width = art.art ? Math.max(...art.art.split("\n").map((r) => r.length)) : 0;
+const pasteChars = art.art ? art.art.split("\n").join(" ").length : 0;
+---
+<Layout title={`${art.title} — ValoArt`} description={`${art.title} Valorant chat ASCII art on ValoArt — copy and paste it into VALORANT chat.`} active="arts">
+  <div class="page-header">
+    <p><a class="back-link" href="/arts">← Back to Arts</a></p>
+    <h1>{art.title}</h1>
+    <p>{art.category}{rows ? ` · ${rows} rows · ${width} wide · ${pasteChars} characters paste-ready` : ""}</p>
+  </div>
+
+  <div class="art-detail">
+    <ArtCard client:load {...art} slug={slug} />
+  </div>
+
+  <p class="detail-note">
+    Copy the art above, then press Ctrl+V in VALORANT chat. Rows are joined with a single space, so the shape survives in chat.
+    Share this page: <code>/art/{slug}</code>
+  </p>
+
+  {related.length > 0 && (
+    <section class="related">
+      <h2>More {art.category} arts</h2>
+      <div class="related-grid">
+        {related.map((rel) => (
+          <ArtCard client:load {...rel} slug={getSlugById(slugMap, rel)} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <style>
+    .back-link {
+      font-family: 'Figtree', system-ui, sans-serif;
+      color: #ff8a93;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .art-detail {
+      display: grid;
+      grid-template-columns: min(480px, 100%);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .detail-note {
+      font-family: 'Figtree', system-ui, sans-serif;
+      color: #d8dde2;
+      line-height: 1.6;
+      max-width: 680px;
+      margin: 0 0 40px;
+    }
+    .detail-note code {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-family: 'Noto Sans Mono', monospace;
+      font-size: 14px;
+    }
+    .related { padding: 20px 0 80px; }
+    .related h2 {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(24px, 4vw, 32px);
+      margin: 0 0 16px;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .related-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .related-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</Layout>

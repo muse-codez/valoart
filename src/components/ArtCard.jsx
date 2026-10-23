@@ -5,7 +5,7 @@ import { getCopyCount, getGlobalCopyCount, recordCopy, recordGlobalCopy } from "
 
 // One grid-box card, always the same size.
 // Props: id, title, category, copies, author, url, art (optional string).
-export default function ArtCard({ id, title, category, url, art }) {
+export default function ArtCard({ id, title, category, url, art, slug }) {
   const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
   // Global copies for this card, for all visitors. Loaded on mount;
@@ -101,7 +101,7 @@ export default function ArtCard({ id, title, category, url, art }) {
           <span className="art-card-placeholder">Art coming soon</span>
         )}
       </div>
-      <h3 className="art-card-title">{title}</h3>
+      <h3 className="art-card-title">{slug ? <a href={`/art/${slug}`}>{title}</a> : title}</h3>
       <p className="art-card-meta">
         {category}
         {copyCount > 0 ? ` · ${copyCount} ${copyCount === 1 ? "copy" : "copies"}` : ""}
@@ -172,6 +172,14 @@ export default function ArtCard({ id, title, category, url, art }) {
           font-family: 'Figtree', system-ui, sans-serif;
           color: #9aa0a8;
           font-size: 14px;
+        }
+        .art-card-title a {
+          color: #ece8e1;
+          text-decoration: none;
+        }
+        .art-card-title a:hover {
+          color: #ff8a93;
+          text-decoration: underline;
         }
         .art-card-title {
           font-family: 'Outfit', system-ui, sans-serif;

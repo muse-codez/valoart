@@ -2,6 +2,9 @@ import React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { GALLERY_ARTS } from "../lib/gallery.js";
 import { PROMO_ART } from "../lib/promo.js";
+import { buildSlugMap, getSlugById } from "../lib/slug.js";
+
+const SLUG_MAP = buildSlugMap(GALLERY_ARTS);
 import SearchBar from "./SearchBar.jsx";
 import ArtCard from "./ArtCard.jsx";
 
@@ -61,7 +64,7 @@ export default function ArtGallery({ extraArts = [] }) {
       <h2>Spread ValoArt</h2>
       <p className="lead">Copy this promo art and paste it in VALORANT chat — it promotes ruvix.lol.</p>
       <div className="pinned-grid">
-        <ArtCard {...PROMO_ART} />
+        <ArtCard {...PROMO_ART} slug="promo-ruvix" />
       </div>
     </section>
     <section className="gallery-section">
@@ -74,7 +77,7 @@ export default function ArtGallery({ extraArts = [] }) {
       </p>
       <div className="gallery-grid">
         {visible.map((art) => (
-          <ArtCard key={art.id ?? art.title} {...art} />
+          <ArtCard key={art.id ?? art.title} {...art} slug={art.id && SLUG_MAP.has(art.id) ? getSlugById(SLUG_MAP, art) : undefined} />
         ))}
         {results.length === 0 && <p className="meta">No matches. Try another search.</p>}
       </div>
