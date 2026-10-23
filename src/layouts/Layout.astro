@@ -2,9 +2,10 @@
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 const { title = "ValoArt: Valorant Chat ASCII Arts", description = "ValoArt. Valorant chat ASCII arts, made for VALORANT chat.", active = "" } = Astro.props;
-// Canonical + social URL: the live site. The large social image is a
-// real screenshot of the root page, cropped to 1200x630 (see public/og-image.png).
-const siteUrl = "https://valoart.vercel.app";
+// Canonical + social URL: ruvix.lol, the site's domain (not the Vercel URL).
+// The large social image is a real screenshot of the root page, cropped
+// to 1200x630 (see public/og-image.png).
+const siteUrl = "https://ruvix.lol";
 const pageUrl = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImage = `${siteUrl}/og-image.png`;
 ---
