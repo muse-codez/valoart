@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
-import { Undo, Redo, Contrast, FlipHorizontal, ArrowLeft, ArrowRight, Trash, Plus, Copy, Upload } from "lucide-react";
+import { Undo, Redo, Contrast, FlipHorizontal, ArrowLeft, ArrowRight, Trash, Plus, Copy, Upload, Keyboard } from "lucide-react";
 import { getCopyCount, getGlobalCopyCount, recordCopy, recordGlobalCopy } from "../lib/copyCounts.js";
 
 // Canvas section — extra file, as requested.
@@ -205,18 +205,15 @@ export default function Canvas({ onPublish }) {
           <p className="lead">Every cell becomes one character in chat.</p>
 
           <div className="canvas-tools">
-            <button type="button" onClick={handleUndo} disabled={!history.length}><Undo size={15} /> Undo <kbd>Ctrl+Z</kbd></button>
-            <button type="button" onClick={handleRedo} disabled={!future.length}><Redo size={15} /> Redo <kbd>Ctrl+Shift+Z</kbd></button>
-            <button type="button" onClick={handleInvert}><Contrast size={15} /> Invert <kbd>I</kbd></button>
-            <button type="button" onClick={handleMirror}><FlipHorizontal size={15} /> Mirror <kbd>M</kbd></button>
-            <button type="button" onClick={handleShiftLeft}><ArrowLeft size={15} /> Shift left <kbd>Shift+←</kbd></button>
-            <button type="button" onClick={handleShiftRight}><ArrowRight size={15} /> Shift right <kbd>Shift+→</kbd></button>
-            <button type="button" onClick={handleClear}><Trash size={15} /> Clear <kbd>Del</kbd></button>
-            <button type="button" onClick={handleEnlarge}><Plus size={15} /> Enlarge canvas <kbd>E</kbd></button>
+            <button type="button" onClick={handleUndo} disabled={!history.length} aria-label="Undo (Ctrl+Z)"><Undo size={15} /> Undo <span className="tool-tip"><Keyboard size={11} /> Ctrl+Z</span></button>
+            <button type="button" onClick={handleRedo} disabled={!future.length} aria-label="Redo (Ctrl+Shift+Z)"><Redo size={15} /> Redo <span className="tool-tip"><Keyboard size={11} /> Ctrl+Shift+Z</span></button>
+            <button type="button" onClick={handleInvert} aria-label="Invert (I)"><Contrast size={15} /> Invert <span className="tool-tip"><Keyboard size={11} /> I</span></button>
+            <button type="button" onClick={handleMirror} aria-label="Mirror (M)"><FlipHorizontal size={15} /> Mirror <span className="tool-tip"><Keyboard size={11} /> M</span></button>
+            <button type="button" onClick={handleShiftLeft} aria-label="Shift left (Shift+Left arrow)"><ArrowLeft size={15} /> Shift left <span className="tool-tip"><Keyboard size={11} /> Shift+←</span></button>
+            <button type="button" onClick={handleShiftRight} aria-label="Shift right (Shift+Right arrow)"><ArrowRight size={15} /> Shift right <span className="tool-tip"><Keyboard size={11} /> Shift+→</span></button>
+            <button type="button" onClick={handleClear} aria-label="Clear (Delete)"><Trash size={15} /> Clear <span className="tool-tip"><Keyboard size={11} /> Del</span></button>
+            <button type="button" onClick={handleEnlarge} aria-label="Enlarge canvas (E)"><Plus size={15} /> Enlarge canvas <span className="tool-tip"><Keyboard size={11} /> E</span></button>
           </div>
-          <p className="meta canvas-shortcuts">
-            Shortcuts: <kbd>Ctrl/Cmd+Z</kbd> Undo · <kbd>Ctrl+Shift+Z</kbd> Redo · <kbd>Shift+←</kbd> / <kbd>Shift+→</kbd> Shift · <kbd>I</kbd> Invert · <kbd>M</kbd> Mirror · <kbd>Del</kbd> Clear · <kbd>E</kbd> Enlarge
-          </p>
 
           <div className="spacing-row">
             <label className="field-label" htmlFor="canvas-height">Canvas height</label>
@@ -363,16 +360,36 @@ export default function Canvas({ onPublish }) {
         .canvas-tools button:disabled { opacity: 0.4; cursor: default; }
         .canvas-tools button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.16); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); }
         .canvas-tools button:active:not(:disabled) { transform: scale(0.97); }
-        .canvas-tools kbd, .canvas-shortcuts kbd {
-          background: rgba(255, 255, 255, 0.12);
-          border-radius: 4px;
-          padding: 1px 5px;
+        /* Small hover tooltips: shortcuts live here now, not in a help
+           line or on the buttons themselves. They fade/slide in slowly
+           and lazily (0.8s lazy ease), and fade out just as slowly. */
+        .canvas-tools button { position: relative; }
+        .tool-tip {
+          position: absolute;
+          bottom: calc(100% + 8px);
+          left: 50%;
+          transform: translateX(-50%) translateY(4px);
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          background: #1a1a1a;
+          color: #ece8e1;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          border-radius: 6px;
+          padding: 4px 8px;
           font-size: 11px;
           font-family: 'Noto Sans Mono', monospace;
-          color: #b9bfc7;
           white-space: nowrap;
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+          opacity: 0;
+          pointer-events: none;
+          z-index: 10;
+          transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .canvas-shortcuts { margin: 10px 0 0; line-height: 1.8; }
+        .canvas-tools button:hover:not(:disabled) .tool-tip {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
         .publish-button span { display: inline-flex; align-items: center; gap: 8px; }
         .field-label {
           display: block;
