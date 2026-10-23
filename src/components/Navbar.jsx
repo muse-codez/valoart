@@ -47,7 +47,7 @@ export default function Navbar({ active = "" }) {
           justify-content: space-between;
           gap: 16px;
           padding: 12px 18px;
-          /* Floating, square with rounded edges — not a pill */
+          /* Floating, square with rounded edges, not a pill */
           border-radius: 16px;
           /* Transparent, but not fully blurred */
           background: rgba(52, 52, 52, 0.62);

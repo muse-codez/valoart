@@ -12,7 +12,7 @@
 // promote ruvix.lol.
 export const PROMO_ART = {
   id: "promo-ruvix",
-  title: "Promo \u2014 ruvix.lol",
+  title: "Promo: ruvix.lol",
   category: "Promo",
   url: "https://ruvix.lol",
   art: "░░░░░░░░░░░░░░░░░░░░░░░░░░\n░█▀▀▀░█░░█░█░░█░████░█░░█░\n░█▀▀░░█░░█░█░░█░░██░░░██░░\n░█░░█░▀▀▀▀░░▀▀░░████░█░░█░\n░░░░░░░░░░░░░░░░░░░░░░░░░░"
