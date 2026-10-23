@@ -10,10 +10,17 @@ export default function ArtCard({ title, category, copies, author, url, art }) {
   const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  // Proper VALORANT-chat copying: do NOT copy with newlines, and do NOT
+  // trim or re-wrap rows. Join the rows into one line, preserving every
+  // character in each row exactly. VALORANT chat then wraps that single
+  // line back into the art's shape, so the art does not break.
+  // Preview stays multi-line: <pre> with white-space: pre, monospace,
+  // no wrapping — so what you see is exactly what will be pasted.
   async function handleCopy() {
     if (art) {
+      const pasteReady = art.split(/\r?\n/).join("");
       try {
-        await navigator.clipboard.writeText(art);
+        await navigator.clipboard.writeText(pasteReady);
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
         return;

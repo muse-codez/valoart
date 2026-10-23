@@ -1,29 +1,62 @@
 import React from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { GALLERY_ARTS } from "../lib/gallery.js";
 import SearchBar from "./SearchBar.jsx";
 import ArtCard from "./ArtCard.jsx";
 
+const PAGE_SIZE = 24;
+
 export default function ArtGallery() {
   const [query, setQuery] = useState("");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef(null);
 
   const results = useMemo(() => {
     const q = query.toLowerCase();
     return GALLERY_ARTS.filter((art) => art.title.toLowerCase().includes(q));
   }, [query]);
 
+  // Reset to the first 24 whenever the search changes.
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [query]);
+
+  // Auto-load the next 24 when the user scrolls near the bottom.
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, results.length));
+        }
+      },
+      { rootMargin: "400px" }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [results.length]);
+
+  const visible = results.slice(0, visibleCount);
+  const hasMore = visibleCount < results.length;
+
   return (
     <section className="gallery-section">
       <h2>Chat arts</h2>
-      <p className="lead">Search these arts. Hover a card to reveal its copy button.</p>
+      <p className="lead">Search these arts. Hover a card to reveal its copy button. Scroll to load more.</p>
       <SearchBar value={query} onChange={setQuery} placeholder="Search these arts…" />
-      <p className="meta">{results.length} art{results.length === 1 ? "" : "s"}</p>
+      <p className="meta">
+        Showing {visible.length} of {results.length} art{results.length === 1 ? "" : "s"}
+        {hasMore ? " — scroll to load more" : ""}
+      </p>
       <div className="gallery-grid">
-        {results.map((art) => (
+        {visible.map((art) => (
           <ArtCard key={art.title} {...art} />
         ))}
         {results.length === 0 && <p className="meta">No matches. Try another search.</p>}
       </div>
+      {hasMore && <div ref={sentinelRef} className="gallery-sentinel" aria-hidden="true" />}
+      {!hasMore && results.length > 0 && <p className="meta gallery-end">End of gallery.</p>}
 
       <style>{`
         .gallery-section { padding: 20px 0 80px; }
@@ -52,6 +85,8 @@ export default function ArtGallery() {
           gap: 16px;
           margin-top: 16px;
         }
+        .gallery-sentinel { height: 1px; }
+        .gallery-end { margin-top: 18px; text-align: center; }
         @media (max-width: 900px) {
           .gallery-grid { grid-template-columns: repeat(2, 1fr); }
         }
