@@ -104,9 +104,9 @@ export default function Navbar({ active = "" }) {
           border-radius: 10px;
           transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), color 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .nav-option svg { flex-shrink: 0; }
+        .nav-option svg, .github-link svg { flex-shrink: 0; will-change: transform; }
         @keyframes icon-flip { 0% { transform: perspective(500px) rotateY(0deg) scale(1); } 50% { transform: perspective(500px) rotateY(180deg) scale(1.15); } 100% { transform: perspective(500px) rotateY(360deg) scale(1); } }
-        .nav-option:hover svg, .github-link:hover svg { animation: icon-flip 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .nav-option:hover svg, .github-link:hover svg { animation: icon-flip 1.4s cubic-bezier(0.65, 0, 0.35, 1); }
         .nav-option:hover {
           background: rgba(255, 255, 255, 0.10);
           color: #ffffff;

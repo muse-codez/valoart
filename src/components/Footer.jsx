@@ -125,7 +125,8 @@ export default function Footer() {
         }
         .footer-github:hover { background: rgba(255, 255, 255, 0.10); }
         @keyframes icon-flip { 0% { transform: perspective(500px) rotateY(0deg) scale(1); } 50% { transform: perspective(500px) rotateY(180deg) scale(1.15); } 100% { transform: perspective(500px) rotateY(360deg) scale(1); } }
-        .footer-github:hover svg { animation: icon-flip 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .footer-github svg { will-change: transform; }
+        .footer-github:hover svg { animation: icon-flip 1.4s cubic-bezier(0.65, 0, 0.35, 1); }
         .footer-domain {
           font-family: 'Figtree', system-ui, sans-serif;
           color: #ff8a93;

@@ -149,7 +149,8 @@ export default function ArtCard({ id, title, category, url, art, slug }) {
           z-index: 1;
         }
         @keyframes icon-flip { 0% { transform: perspective(500px) rotateY(0deg) scale(1); } 50% { transform: perspective(500px) rotateY(180deg) scale(1.15); } 100% { transform: perspective(500px) rotateY(360deg) scale(1); } }
-        .art-card-heart:hover svg, .art-card-copy:hover .art-card-copy-label svg { animation: icon-flip 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .art-card-heart svg, .art-card-copy-label svg { will-change: transform; }
+        .art-card-heart:hover svg, .art-card-copy:hover .art-card-copy-label svg { animation: icon-flip 1.4s cubic-bezier(0.65, 0, 0.35, 1); }
         /* Art quality: tight line-height (1, not 1.35, so blocks stay square
            instead of stretched tall), a font with proper block / box-drawing
            / symbol coverage, no ligatures, no wrapping, no scrollbars. */

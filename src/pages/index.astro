@@ -86,9 +86,9 @@ import Marquee from "../components/Marquee.jsx";
       padding: 12px 22px;
       transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .cta svg { flex-shrink: 0; }
+    .cta svg { flex-shrink: 0; will-change: transform; }
     @keyframes icon-flip { 0% { transform: perspective(500px) rotateY(0deg) scale(1); } 50% { transform: perspective(500px) rotateY(180deg) scale(1.15); } 100% { transform: perspective(500px) rotateY(360deg) scale(1); } }
-    .cta:hover svg { animation: icon-flip 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+    .cta:hover svg { animation: icon-flip 1.4s cubic-bezier(0.65, 0, 0.35, 1); }
     .cta.primary { background: #ff4655; border-color: #ff4655; color: #fff; }
     .cta:hover { transform: translateY(-1px); }
 
