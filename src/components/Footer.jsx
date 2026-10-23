@@ -40,6 +40,10 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <p>© 2026 ValoArt · Made for VALORANT chat</p>
+        <nav className="footer-legal" aria-label="Legal pages">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
+        </nav>
       </div>
 
       <style>{`
@@ -136,8 +140,20 @@ export default function Footer() {
           font-family: 'Figtree', system-ui, sans-serif;
           font-size: 13px;
           color: #b9bfc7;
-          margin: 0;
+          margin: 0 0 10px;
         }
+        .footer-legal {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px 18px;
+        }
+        .footer-legal a {
+          font-family: 'Figtree', system-ui, sans-serif;
+          font-size: 13px;
+          color: #b9bfc7;
+          text-decoration: none;
+        }
+        .footer-legal a:hover { color: #ffffff; text-decoration: underline; }
         @media (max-width: 600px) {
           .footer-inner { flex-direction: column; }
         }
