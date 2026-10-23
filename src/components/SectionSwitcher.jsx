@@ -2,11 +2,25 @@ import React from "react";
 import { useState } from "react";
 import ArtGallery from "./ArtGallery.jsx";
 import TextGen from "./TextGen.jsx";
+import Canvas from "./Canvas.jsx";
 
 // Section tabs, placed above the gallery area:
-// Arts (gallery), Text Gen (banner generator), Canvas (coming soon).
+// Arts (gallery), Text Gen (banner generator), Canvas (paint canvas).
 export default function SectionSwitcher() {
   const [tab, setTab] = useState("arts");
+  const [published, setPublished] = useState([]);
+
+  function handlePublish(artText) {
+    const entry = {
+      id: `canvas-${Date.now()}`,
+      title: "Canvas art",
+      category: "Canvas",
+      url: "",
+      art: artText,
+    };
+    setPublished((prev) => [entry, ...prev]);
+    setTab("arts");
+  }
 
   return (
     <div className="section-switcher">
@@ -22,14 +36,9 @@ export default function SectionSwitcher() {
         </button>
       </div>
 
-      {tab === "arts" && <ArtGallery />}
+      {tab === "arts" && <ArtGallery extraArts={published} />}
       {tab === "textgen" && <TextGen />}
-      {tab === "canvas" && (
-        <section className="canvas-placeholder">
-          <h2>Canvas</h2>
-          <p className="lead">Canvas drawing studio — coming soon.</p>
-        </section>
-      )}
+      {tab === "canvas" && <Canvas onPublish={handlePublish} />}
 
       <style>{`
         .tab-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 6px; }
@@ -45,19 +54,6 @@ export default function SectionSwitcher() {
           cursor: pointer;
         }
         .tab-button.active { background: #ff4655; border-color: #ff4655; color: #fff; }
-        .canvas-placeholder { padding: 20px 0 80px; }
-        .canvas-placeholder h2 {
-          font-family: 'Outfit', system-ui, sans-serif;
-          font-weight: 700;
-          font-size: clamp(28px, 4vw, 40px);
-          color: #ece8e1;
-          margin: 0 0 8px;
-        }
-        .canvas-placeholder .lead {
-          font-family: 'Figtree', system-ui, sans-serif;
-          color: #d8dde2;
-          margin: 0;
-        }
       `}</style>
     </div>
   );

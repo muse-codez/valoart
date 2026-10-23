@@ -6,15 +6,15 @@ import ArtCard from "./ArtCard.jsx";
 
 const PAGE_SIZE = 24;
 
-export default function ArtGallery() {
+export default function ArtGallery({ extraArts = [] }) {
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef(null);
 
   const results = useMemo(() => {
     const q = query.toLowerCase();
-    return GALLERY_ARTS.filter((art) => art.title.toLowerCase().includes(q));
-  }, [query]);
+    return [...extraArts, ...GALLERY_ARTS].filter((art) => art.title.toLowerCase().includes(q));
+  }, [query, extraArts]);
 
   // Reset to the first 24 whenever the search changes.
   useEffect(() => {
